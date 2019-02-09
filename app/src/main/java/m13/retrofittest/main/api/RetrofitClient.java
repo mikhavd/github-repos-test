@@ -10,12 +10,21 @@ import retrofit2.converter.gson.GsonConverterFactory;
 /**
  * Created by Mikhail Avdeev on 08.02.2019.
  */
-public class ApiProvider {
+public class RetrofitClient {
 
     //todo: https://developer.github.com/v3/media/#request-specific-version
     public static final String BASE_URL = "https://api.github.com";
+    private final Retrofit retrofit;
 
-    static Retrofit getRetrofit(){
+    public RetrofitClient(){
+        this.retrofit = initRetrofit();
+    }
+
+    public Retrofit getRetrofit() {
+        return this.retrofit;
+    }
+
+    static private Retrofit initRetrofit(){
         // Add the interceptor to OkHttpClient
         OkHttpClient client = new OkHttpClient();
 

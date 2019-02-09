@@ -7,6 +7,7 @@ import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
+import retrofit2.http.Url;
 
 /**
  * Created by Mikhail Avdeev on 08.02.2019.
@@ -26,6 +27,13 @@ public interface ReposEndpointInterface {
             @Path("org") String organization,
             @Query("type") String repoType,
             @Query("sort") String orderingParameter,
-            @Query("direction") Integer order);
+            @Query("direction") Integer order,
+            @Query("per_page") Integer maxNumberOfRepos);
+
+    @GET
+    Call<List<Repo>> organizationRepoListByLink(
+            @Url String url);
+
+
 
 }

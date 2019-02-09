@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">RetrofitTest</string>
+    <string name="str_server_communication_error">Cummunication error</string>
+    <string name="str_auth_error">Authorization error</string>
+    <string name="has_no_rights_for_archive">Access denied</string>
 </resources>

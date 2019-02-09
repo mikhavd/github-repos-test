@@ -19,14 +19,22 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.android.support:appcompat-v7:27.1.1'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     implementation 'com.squareup.retrofit2:retrofit:2.3.0'
-    implementation 'com.android.support:recyclerview-v7:27.1.1' //RecyclerView
+    implementation 'com.android.support:recyclerview-v7:27.1.1'
+    //RecyclerView
     implementation 'com.google.code.gson:gson:2.8.2'
-    implementation 'com.squareup.retrofit2:converter-gson:2.3.0' //Конвертер JSON
-    implementation 'org.glassfish:javax.annotation:10.0-b28' //для аннотаций
+    implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
+    //Конвертер JSON
+    implementation 'com.github.jitpack:gradle-simple:1.0.5'
+    implementation 'org.glassfish:javax.annotation:10.0-b28'
+    implementation 'com.github.jitpack:gradle-simple:1.0.5'
+    //implementation 'com.github.eclipse:egit-github:v5.0.0.201806131550-r'
+
+    //implementation 'com.github.eclipse:egit-github:v5.2.0.201812061821-r'
+
 }
