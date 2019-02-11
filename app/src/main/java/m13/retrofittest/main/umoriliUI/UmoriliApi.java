@@ -1,4 +1,4 @@
-package m13.retrofittest.main;
+package m13.retrofittest.main.umoriliUI;
 
 import java.util.List;
 

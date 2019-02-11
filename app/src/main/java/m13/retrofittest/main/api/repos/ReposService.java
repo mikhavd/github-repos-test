@@ -5,18 +5,18 @@ import java.util.List;
 
 import m13.retrofittest.main.api.ApiService;
 import m13.retrofittest.main.api.HeaderParser;
-import m13.retrofittest.main.api.RetrofitClient;
+import m13.retrofittest.main.api.GithubRetorfitClient;
 import m13.retrofittest.main.api.generated.repos.Repo;
 import retrofit2.Response;
 
 /**
  * Created by Mikhail Avdeev on 09.02.2019.
  */
-public class ReposAPI extends ApiService<ReposEndpointInterface, List<Repo>> {
+public class ReposService extends ApiService<ReposEndpointInterface, List<Repo>> {
 
 
-    public ReposAPI(RetrofitClient retrofitClient) {
-        super(retrofitClient);
+    public ReposService(GithubRetorfitClient githubRetorfitClient) {
+        super(githubRetorfitClient);
     }
 
 
@@ -43,6 +43,24 @@ public class ReposAPI extends ApiService<ReposEndpointInterface, List<Repo>> {
             nextLink = HeaderParser.parseHeaderLink(additionalResponce);
             System.out.println("ReposeAPI: getRepos: NEW nextLink: " + nextLink);
         }
+        return repos;
+    }
+
+    static public List<Repo> handleAsyncGetRepos(Response repoResponce){
+        List<Repo> origRepos = (List<Repo>) repoResponce.body();
+        List<Repo> repos = new ArrayList<>();
+        repos.addAll(origRepos);
+        //next page with elements obtained from link from responce
+        String nextLink = HeaderParser.parseHeaderLink(repoResponce);
+        System.out.println("ReposeAPI: getRepos: ORIG nextLink: " + nextLink);
+        /*while (!nextLink.isEmpty()) {
+            //todo: asyncLoading
+            Response additionalResponce = secureExecute(
+                    this.api.organizationRepoListByLink(nextLink));
+            repos.addAll((List<Repo>) additionalResponce.body());
+            nextLink = HeaderParser.parseHeaderLink(additionalResponce);
+            System.out.println("ReposeAPI: getRepos: NEW nextLink: " + nextLink);
+        }*/
         return repos;
     }
 }

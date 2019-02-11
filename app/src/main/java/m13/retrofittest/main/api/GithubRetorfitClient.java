@@ -10,13 +10,13 @@ import retrofit2.converter.gson.GsonConverterFactory;
 /**
  * Created by Mikhail Avdeev on 08.02.2019.
  */
-public class RetrofitClient {
+public class GithubRetorfitClient {
 
     //todo: https://developer.github.com/v3/media/#request-specific-version
     public static final String BASE_URL = "https://api.github.com";
     private final Retrofit retrofit;
 
-    public RetrofitClient(){
+    public GithubRetorfitClient(){
         this.retrofit = initRetrofit();
     }
 

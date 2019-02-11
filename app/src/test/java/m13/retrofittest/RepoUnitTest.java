@@ -4,8 +4,8 @@ import org.junit.Test;
 
 import java.util.List;
 
-import m13.retrofittest.main.api.repos.ReposAPI;
-import m13.retrofittest.main.api.RetrofitClient;
+import m13.retrofittest.main.api.repos.ReposService;
+import m13.retrofittest.main.api.GithubRetorfitClient;
 import m13.retrofittest.main.api.generated.repos.Repo;
 
 import static org.junit.Assert.*;
@@ -27,10 +27,10 @@ public class RepoUnitTest {
     public void NewRepoTest() {
         List<Repo> repos = null;
         //получаем список репозиториев
-        ReposAPI reposAPI = new ReposAPI(new RetrofitClient());
+        ReposService reposService = new ReposService(new GithubRetorfitClient());
         try {
             Integer maxNumberOfRepos = 1000;
-            repos = reposAPI.getRepos("square", maxNumberOfRepos);
+            repos = reposService.getRepos("square", maxNumberOfRepos);
             for (Repo repo: repos) {
                 System.out.println("repo.name: " + repo.getName());
             }

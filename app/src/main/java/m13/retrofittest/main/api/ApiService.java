@@ -4,7 +4,6 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
 import m13.retrofittest.main.api.errors.ErrorHandler;
-import okhttp3.Headers;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -12,13 +11,13 @@ import retrofit2.Response;
  * Created by Mikhail Avdeev on 09.02.2019.
  */
 public class ApiService<Api, T> {
-    protected RetrofitClient apiClient;
+    protected GithubRetorfitClient apiClient;
     protected Api api;
 
 
-    protected ApiService(RetrofitClient retrofitClient) {
+    protected ApiService(GithubRetorfitClient githubRetorfitClient) {
         this.api =
-                retrofitClient.getRetrofit().create(getManagedClass());
+                githubRetorfitClient.getRetrofit().create(getManagedClass());
     }
 
     protected Response<T> secureExecute(Call<T> call) throws Exception {
@@ -41,4 +40,7 @@ public class ApiService<Api, T> {
         return (Class<Api>) type;
     }
 
+    public Api getApi() {
+        return api;
+    }
 }

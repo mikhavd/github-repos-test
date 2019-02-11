@@ -1,4 +1,4 @@
-package m13.retrofittest.main;
+package m13.retrofittest.main.umoriliUI;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -33,7 +33,7 @@ public class UmoriliMainActivity extends AppCompatActivity {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
-        PostsAdapter adapter = new PostsAdapter(posts);
+        UmoriliPostsAdapter adapter = new UmoriliPostsAdapter(posts);
         recyclerView.setAdapter(adapter);
 
         try {

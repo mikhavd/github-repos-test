@@ -1,4 +1,4 @@
-package m13.retrofittest.main;
+package m13.retrofittest.main.umoriliUI;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

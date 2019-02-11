@@ -3,7 +3,7 @@ package m13.retrofittest.main.api.repos;
 /**
  * Created by Mikhail Avdeev on 08.02.2019.
  */
-enum RepoType {
+public enum RepoType {
     all("all"),
     publicType("public"),
     privateType("private"),
