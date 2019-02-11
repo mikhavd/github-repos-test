@@ -3,8 +3,11 @@ package m13.retrofittest.main.api.repos;
 import android.widget.Toast;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.List;
 
 import m13.retrofittest.main.api.HeaderParser;
+import m13.retrofittest.main.api.generated.repos.Repo;
 import m13.retrofittest.main.githubUI.ReposActivity;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -17,16 +20,18 @@ public class ReposAsyncCallback implements Callback {
 
     private final WeakReference<ReposActivity> activity;
 
-    public ReposAsyncCallback(WeakReference<ReposActivity> activityWeakReference){
+    public ReposAsyncCallback(WeakReference<ReposActivity> activityWeakReference) {
         this.activity = activityWeakReference;
 
     }
+
     @Override
     public void onResponse(Call call, Response response) {
         String nextLink = HeaderParser.parseHeaderLink(response);
-        System.out.println("ReposeAPI: getRepos: nextLink: " + nextLink);
-        activity.get().refreshRepos(ReposService.handleAsyncGetRepos(response));
-        if (!nextLink.isEmpty()) activity.get().loadAdditionalRepos(nextLink);
+        activity.get().refreshRepos(handleAsyncGetRepos(response));
+        if (!nextLink.isEmpty()) {
+            activity.get().loadAdditionalRepos(nextLink);
+        }
     }
 
     @Override
@@ -37,5 +42,13 @@ public class ReposAsyncCallback implements Callback {
         //todo: использовать эту функцию
         //ErrorHandler.parseServerErrorCode(call.e.code());
 
+    }
+
+
+    private List<Repo> handleAsyncGetRepos(Response repoResponce) {
+        List<Repo> origRepos = (List<Repo>) repoResponce.body();
+        List<Repo> repos = new ArrayList<>();
+        repos.addAll(origRepos);
+        return repos;
     }
 }

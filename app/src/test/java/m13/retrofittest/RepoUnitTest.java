@@ -24,7 +24,7 @@ public class RepoUnitTest {
     }
 
     @Test
-    public void NewRepoTest() {
+    public void SyncRepoTest() {
         List<Repo> repos = null;
         //получаем список репозиториев
         ReposService reposService = new ReposService(new GithubRetorfitClient());

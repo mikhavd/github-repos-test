@@ -45,8 +45,7 @@ public class ReposActivity extends AppCompatActivity {
         ReposAdapter adapter = new ReposAdapter(repos);
         recyclerView.setAdapter(adapter);
         try {
-            this.repoApi = new ReposService(new GithubRetorfitClient())
-                    .getApi();
+            this.repoApi = new ReposService(new GithubRetorfitClient()).getApi();
             loadRepos();
         } catch (Exception e) {
             Log.d("exception", "exception: " + e.toString());
@@ -62,7 +61,7 @@ public class ReposActivity extends AppCompatActivity {
                 null,
                 null,
                 maxNumberOfRepos);
-        call.enqueue(new ReposAsyncCallback(new WeakReference<>(this)));
+        call.enqueue(new ReposAsyncCallback(getWeakReference()));
     }
 
     public void refreshRepos(List<Repo> repos) {
@@ -75,7 +74,11 @@ public class ReposActivity extends AppCompatActivity {
         Toast.makeText(
                 this,
                 "loadingAdditionalRepos, link: " + nextLink, Toast.LENGTH_SHORT).show();
-            Call<List<Repo>> call = this.repoApi.organizationRepoListByLink(nextLink);
-            call.enqueue(new ReposAsyncCallback(new WeakReference<>(this)));
+        Call<List<Repo>> call = this.repoApi.organizationRepoListByLink(nextLink);
+        call.enqueue(new ReposAsyncCallback(getWeakReference()));
+    }
+
+    WeakReference<ReposActivity> getWeakReference(){
+        return new WeakReference<>(this);
     }
 }
