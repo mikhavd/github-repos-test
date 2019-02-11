@@ -15,7 +15,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 /**
  * Created by Mikhail Avdeev on 18.12.2018.
  */
-public class App extends Application {
+public class UmoriliApp extends Application {
     private static UmoriliApi umoriliApi;
     private Retrofit retrofit;
 
@@ -36,7 +36,7 @@ public class App extends Application {
 
     public void asyncCall(){
         //асинхронный вызов
-        App.getApi().getData("bash", 50).enqueue(
+        UmoriliApp.getApi().getData("bash", 50).enqueue(
             new Callback<List<PostModel>>() {
                 @Override
                 public void onResponse(Call<List<PostModel>> call, Response<List<PostModel>> response) {

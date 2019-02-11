@@ -20,7 +20,7 @@ public class RetrofitClient {
         this.retrofit = initRetrofit();
     }
 
-    public Retrofit getRetrofit() {
+    Retrofit getRetrofit() {
         return this.retrofit;
     }
 

@@ -1,9 +1,12 @@
-package m13.retrofittest.main.api;
+package m13.retrofittest.main.api.repos;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import m13.retrofittest.main.repos.Repo;
+import m13.retrofittest.main.api.ApiService;
+import m13.retrofittest.main.api.HeaderParser;
+import m13.retrofittest.main.api.RetrofitClient;
+import m13.retrofittest.main.api.generated.repos.Repo;
 import retrofit2.Response;
 
 /**
@@ -16,9 +19,12 @@ public class ReposAPI extends ApiService<ReposEndpointInterface, List<Repo>> {
         super(retrofitClient);
     }
 
+
     public List<Repo> getRepos(String organizationName, Integer maxNumberOfRepos) throws Exception {
+        //по умлочанию запрашиваем все репозитории
         RepoType repoType = RepoType.all;
         List<Repo> repos = new ArrayList<>();
+        //todo: если добавлять асинхронный callback или handler, то лучше здесь...
         Response<List<Repo>> repoResponce = secureExecute(api.organizationRepoList(organizationName,
                 repoType.getRepoTypeName(),
                 //todo: здесь добавить Enum, и загуглить, как его связать с Retrofit query
@@ -27,13 +33,14 @@ public class ReposAPI extends ApiService<ReposEndpointInterface, List<Repo>> {
                 maxNumberOfRepos));
         List<Repo> origRepos = repoResponce.body();
         repos.addAll(origRepos);
-        String nextLink = super.parseHeaderLink(repoResponce);
+        //next page with elements obtained from link from responce
+        String nextLink = HeaderParser.parseHeaderLink(repoResponce);
         System.out.println("ReposeAPI: getRepos: ORIG nextLink: " + nextLink);
         while (!nextLink.isEmpty()) {
             Response additionalResponce = secureExecute(
                     api.organizationRepoListByLink(nextLink));
             repos.addAll((List<Repo>) additionalResponce.body());
-            nextLink = super.parseHeaderLink(additionalResponce);
+            nextLink = HeaderParser.parseHeaderLink(additionalResponce);
             System.out.println("ReposeAPI: getRepos: NEW nextLink: " + nextLink);
         }
         return repos;

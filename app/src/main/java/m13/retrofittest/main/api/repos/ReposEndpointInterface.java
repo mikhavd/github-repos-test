@@ -1,8 +1,8 @@
-package m13.retrofittest.main.api;
+package m13.retrofittest.main.api.repos;
 
 import java.util.List;
 
-import m13.retrofittest.main.repos.Repo;
+import m13.retrofittest.main.api.generated.repos.Repo;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;

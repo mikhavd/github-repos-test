@@ -1,16 +1,12 @@
 package m13.retrofittest;
 
-import android.util.Log;
-
 import org.junit.Test;
 
 import java.util.List;
 
-import m13.retrofittest.main.api.GithubService;
-import m13.retrofittest.main.api.ReposAPI;
-import m13.retrofittest.main.api.ReposEndpointInterface;
+import m13.retrofittest.main.api.repos.ReposAPI;
 import m13.retrofittest.main.api.RetrofitClient;
-import m13.retrofittest.main.repos.Repo;
+import m13.retrofittest.main.api.generated.repos.Repo;
 
 import static org.junit.Assert.*;
 

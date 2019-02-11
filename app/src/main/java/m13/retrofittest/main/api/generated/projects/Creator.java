@@ -1,4 +1,4 @@
-package m13.retrofittest.main.projects;
+package m13.retrofittest.main.api.generated.projects;
 
 /**
  * Created by Mikhail Avdeev on 08.02.2019.

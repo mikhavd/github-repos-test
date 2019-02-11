@@ -18,7 +18,7 @@ import retrofit2.Response;
 /**
  * Created by Mikhail Avdeev on 18.12.2018.
  */
-public class MainActivity extends AppCompatActivity {
+public class UmoriliMainActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     List<PostModel> posts;
 
@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
 
         try {
-            Call<List<PostModel>> call = App.getApi().getData("bash", 10);
+            Call<List<PostModel>> call = UmoriliApp.getApi().getData("bash", 10);
             call.enqueue(new Callback<List<PostModel>>() {
                 @Override
                 public void onResponse(Call<List<PostModel>> call, Response<List<PostModel>> response) {
@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<List<PostModel>> call, Throwable t) {
-                    Toast.makeText(MainActivity.this, "An error occurred during networking", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(UmoriliMainActivity.this, "An error occurred during networking", Toast.LENGTH_SHORT).show();
                 }
             });
         } catch (Exception e) {

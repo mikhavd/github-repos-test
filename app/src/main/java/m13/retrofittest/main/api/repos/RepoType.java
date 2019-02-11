@@ -1,4 +1,4 @@
-package m13.retrofittest.main.api;
+package m13.retrofittest.main.api.repos;
 
 /**
  * Created by Mikhail Avdeev on 08.02.2019.
