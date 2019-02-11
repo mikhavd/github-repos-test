@@ -17,7 +17,7 @@ import m13.retrofittest.R;
 import m13.retrofittest.main.api.GithubRetorfitClient;
 import m13.retrofittest.main.api.generated.repos.Repo;
 import m13.retrofittest.main.api.repos.RepoType;
-import m13.retrofittest.main.api.repos.ReposAsyncCallback;
+import m13.retrofittest.main.api.repos.ReposCallback;
 import m13.retrofittest.main.api.repos.ReposEndpointInterface;
 import m13.retrofittest.main.api.repos.ReposService;
 import retrofit2.Call;
@@ -74,7 +74,7 @@ public class ReposActivity extends AppCompatActivity {
                 null,
                 null,
                 maxNumberOfRepos);
-        call.enqueue(new ReposAsyncCallback(getWeakReference()));
+        call.enqueue(new ReposCallback(getWeakReference()));
     }
 
     public void addRepos(List<Repo> repos) {
@@ -89,7 +89,7 @@ public class ReposActivity extends AppCompatActivity {
                 this,
                 "loadingAdditionalRepos, link: " + nextLink, Toast.LENGTH_SHORT).show();
         Call<List<Repo>> call = this.repoApi.organizationRepoListByLink(nextLink);
-        call.enqueue(new ReposAsyncCallback(getWeakReference()));
+        call.enqueue(new ReposCallback(getWeakReference()));
     }
 
     WeakReference<ReposActivity> getWeakReference(){

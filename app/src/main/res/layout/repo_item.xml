@@ -6,14 +6,29 @@
 
     <TextView
         android:id="@+id/repoitem"
-        android:layout_width="407dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="main text"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:layout_marginStart="0dp"
         android:layout_marginLeft="0dp"
-        android:text="main text"
+
+        android:textColor="?android:attr/textColorPrimary" />
+
+
+    <TextView
+        android:id="@+id/commits"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="top right"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginLeft="0dp"
+
         android:textColor="?android:attr/textColorPrimary" />
 
     <TextView

@@ -16,19 +16,19 @@ import retrofit2.Response;
 /**
  * Created by Mikhail Avdeev on 11.02.2019.
  */
-public class ReposAsyncCallback implements Callback {
+public class ReposCallback implements Callback {
 
     private final WeakReference<ReposActivity> activity;
 
-    public ReposAsyncCallback(WeakReference<ReposActivity> activityWeakReference) {
+    public ReposCallback(WeakReference<ReposActivity> activityWeakReference) {
         this.activity = activityWeakReference;
 
     }
 
     @Override
     public void onResponse(Call call, Response response) {
-        String nextLink = HeaderParser.parseHeaderLink(response);
         activity.get().addRepos(handleAsyncGetRepos(response));
+        String nextLink = HeaderParser.parseHeaderLink(response);
         if (!nextLink.isEmpty()) {
             activity.get().loadAdditionalRepos(nextLink);
         }
