@@ -1,18 +1,12 @@
 package m13.retrofittest.main.api.repos;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import m13.retrofittest.main.api.ApiService;
-import m13.retrofittest.main.api.HeaderParser;
 import m13.retrofittest.main.api.GithubRetorfitClient;
-import m13.retrofittest.main.api.generated.repos.Repo;
-import retrofit2.Response;
 
 /**
  * Created by Mikhail Avdeev on 09.02.2019.
  */
-public class ReposService extends ApiService<ReposEndpointInterface, List<Repo>> {
+public class ReposService extends ApiService<ReposEndpointInterface> {
 
 
     public ReposService(GithubRetorfitClient githubRetorfitClient) {
@@ -20,7 +14,7 @@ public class ReposService extends ApiService<ReposEndpointInterface, List<Repo>>
     }
 
 
-    public List<Repo> getRepos(String organizationName, Integer maxNumberOfRepos) throws Exception {
+    /*public List<Repo> getRepos(String organizationName, Integer maxNumberOfRepos) throws Exception {
         //по умлочанию запрашиваем все репозитории
         RepoType repoType = RepoType.all;
         List<Repo> repos = new ArrayList<>();
@@ -44,5 +38,5 @@ public class ReposService extends ApiService<ReposEndpointInterface, List<Repo>>
             System.out.println("ReposeAPI: getRepos: NEW nextLink: " + nextLink);
         }
         return repos;
-    }
+    }*/
 }

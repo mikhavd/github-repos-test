@@ -28,7 +28,7 @@ public class ReposAsyncCallback implements Callback {
     @Override
     public void onResponse(Call call, Response response) {
         String nextLink = HeaderParser.parseHeaderLink(response);
-        activity.get().refreshRepos(handleAsyncGetRepos(response));
+        activity.get().addRepos(handleAsyncGetRepos(response));
         if (!nextLink.isEmpty()) {
             activity.get().loadAdditionalRepos(nextLink);
         }

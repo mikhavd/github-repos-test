@@ -5,6 +5,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.lang.ref.WeakReference;
@@ -13,15 +15,12 @@ import java.util.List;
 
 import m13.retrofittest.R;
 import m13.retrofittest.main.api.GithubRetorfitClient;
-import m13.retrofittest.main.api.HeaderParser;
 import m13.retrofittest.main.api.generated.repos.Repo;
 import m13.retrofittest.main.api.repos.RepoType;
 import m13.retrofittest.main.api.repos.ReposAsyncCallback;
 import m13.retrofittest.main.api.repos.ReposEndpointInterface;
 import m13.retrofittest.main.api.repos.ReposService;
 import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
  * Created by Mikhail Avdeev on 11.02.2019.
@@ -29,9 +28,10 @@ import retrofit2.Response;
 public class ReposActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     List<Repo> repos;
-    private String organizationName = "square";
-    private Integer maxNumberOfRepos = 1000;
+    private final static String organizationName = "square";
+    private final static Integer maxNumberOfRepos = 1000;
     private ReposEndpointInterface repoApi;
+    private TextView emptyView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,15 +40,28 @@ public class ReposActivity extends AppCompatActivity {
         //create and populate adapter
         repos = new ArrayList<>();
         recyclerView = findViewById(R.id.posts_recycle_view);
+        emptyView = (TextView) findViewById(R.id.empty_view);
+
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         ReposAdapter adapter = new ReposAdapter(repos);
         recyclerView.setAdapter(adapter);
+        setRecyclerView();
         try {
             this.repoApi = new ReposService(new GithubRetorfitClient()).getApi();
             loadRepos();
         } catch (Exception e) {
             Log.d("exception", "exception: " + e.toString());
+        }
+    }
+
+    private void setRecyclerView() {
+        if (repos.isEmpty()){
+            recyclerView.setVisibility(View.GONE);
+            emptyView.setVisibility(View.VISIBLE);
+        } else{
+            emptyView.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
         }
     }
 
@@ -64,9 +77,10 @@ public class ReposActivity extends AppCompatActivity {
         call.enqueue(new ReposAsyncCallback(getWeakReference()));
     }
 
-    public void refreshRepos(List<Repo> repos) {
+    public void addRepos(List<Repo> repos) {
         this.repos.addAll(repos);
         recyclerView.getAdapter().notifyDataSetChanged();
+        setRecyclerView();
     }
 
     //загрузка дополнительных репозиториев, по прямой ссылке

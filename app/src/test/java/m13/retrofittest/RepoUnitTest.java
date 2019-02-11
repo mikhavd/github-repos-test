@@ -2,14 +2,6 @@ package m13.retrofittest;
 
 import org.junit.Test;
 
-import java.util.List;
-
-import m13.retrofittest.main.api.repos.ReposService;
-import m13.retrofittest.main.api.GithubRetorfitClient;
-import m13.retrofittest.main.api.generated.repos.Repo;
-
-import static org.junit.Assert.*;
-
 /**
  * Example local unit test, which will execute on the development machine (host).
  *
@@ -23,8 +15,8 @@ public class RepoUnitTest {
         //assertTrue("true",reposResponse.size() > 0);
     }
 
-    @Test
-    public void SyncRepoTest() {
+    //@Test
+    /*public void SyncRepoTest() {
         List<Repo> repos = null;
         //получаем список репозиториев
         ReposService reposService = new ReposService(new GithubRetorfitClient());
@@ -39,6 +31,8 @@ public class RepoUnitTest {
         }
 
          assertTrue(repos.size() > 0);
-    }
+    }*/
+
+
 }
 
