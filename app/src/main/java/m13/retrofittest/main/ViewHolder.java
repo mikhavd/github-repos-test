@@ -17,7 +17,7 @@ public class ViewHolder extends RecyclerView.ViewHolder {
 
     public ViewHolder(View itemView) {
         super(itemView);
-        post = (TextView) itemView.findViewById(R.id.postitem_post);
+        post = (TextView) itemView.findViewById(R.id.repoitem);
         site = (TextView) itemView.findViewById(R.id.postitem_site);
         index = (TextView) itemView.findViewById(R.id.index);
     }
