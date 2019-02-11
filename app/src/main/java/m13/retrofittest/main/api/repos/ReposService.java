@@ -6,7 +6,7 @@ import m13.retrofittest.main.api.GithubRetorfitClient;
 /**
  * Created by Mikhail Avdeev on 09.02.2019.
  */
-public class ReposService extends ApiService<ReposEndpointInterface> {
+public class ReposService extends ApiService<ReposInterface> {
 
 
     public ReposService(GithubRetorfitClient githubRetorfitClient) {

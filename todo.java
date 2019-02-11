@@ -38,6 +38,8 @@ https://api.github.com/orgs/square/repos
         3. количество контрибуторов 
         //stats/contributors
         GET /repos/:owner/:repo/stats/contributors
+        https://api.github.com/repos/square/wire/contributors
+            пример с другого приложения: https://api.github.com/repos/tensorflow/tensorflow/contributors?per_page=1
         4. что-то своё на усмотрение (подсмотреть с web-представления листа репозиториев?) //
         
     b. для окна с детальной информацией о репозитории:
@@ -50,3 +52,88 @@ https://api.github.com/orgs/square/repos
         
     d. для экрана коммитов:
         1. список коммитов //
+-----------------------------------------
+RxJava позволяет "объединить" два запроса к API c общими данными в один:
+(отсюда: 
+https://stackoverflow.com/questions/21890338/when-should-one-use-rxjava-observable-and-when-simple-callback-on-android)
+
+private class Combined {
+    UserDetails details;
+    List<Photo> photos;
+}
+
+    Observable.zip(api.getUserDetails(userId), api.getUserPhotos(userId), new Func2<UserDetails, List<Photo>, Combined>() {
+        @Override
+        public Combined call(UserDetails details, List<Photo> photos) {
+            Combined r = new Combined();
+            r.details = details;
+            r.photos = photos;
+            return r;
+        }
+    }).subscribe(new Action1<Combined>() {
+        @Override
+        public void call(Combined combined) {
+        }
+    });
+это аналог для 
+        api.getUserDetails(userId, new Callback<UserDetails>() {
+            @Override
+            public void onSuccess(UserDetails details, Response response) {
+                this.details = details;
+                if(this.photos != null) {
+                    displayPage();
+                }
+            }
+        });
+
+        api.getUserPhotos(userId, new Callback<List<Photo>>() {
+            @Override
+            public void onSuccess(List<Photo> photos, Response response) {
+                this.photos = photos;
+                if(this.details != null) {
+                    displayPage();
+                }
+            }
+        });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

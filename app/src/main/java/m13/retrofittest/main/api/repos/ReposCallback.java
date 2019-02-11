@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import m13.retrofittest.main.api.HeaderParser;
+import m13.retrofittest.main.api.generated.contributors.Contributor;
 import m13.retrofittest.main.api.generated.repos.Repo;
 import m13.retrofittest.main.githubUI.ReposActivity;
 import retrofit2.Call;
@@ -27,7 +28,13 @@ public class ReposCallback implements Callback {
 
     @Override
     public void onResponse(Call call, Response response) {
-        activity.get().addRepos(handleAsyncGetRepos(response));
+        List<Repo> obtainedRepos = handleAsyncGetRepos(response);
+        for (Repo repo: obtainedRepos) {
+            //Integer numberOfContributors = activity.get().loadRepoContributors(repo);
+            RepoWithContributors repoWithContrubutors =
+                    new RepoWithContributors(repo, new ArrayList<Contributor>());
+        }
+        activity.get().addRepos(obtainedRepos);
         String nextLink = HeaderParser.parseHeaderLink(response);
         if (!nextLink.isEmpty()) {
             activity.get().loadAdditionalRepos(nextLink);
