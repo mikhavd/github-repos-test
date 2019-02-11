@@ -6,13 +6,15 @@
 
     <TextView
         android:id="@+id/postitem_post"
-        android:layout_width="match_parent"
+        android:layout_width="407dp"
         android:layout_height="wrap_content"
-        android:text="main text"
-        android:textColor="?android:attr/textColorPrimary"
-        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginLeft="0dp"
+        android:text="main text"
+        android:textColor="?android:attr/textColorPrimary" />
 
     <TextView
         android:id="@+id/postitem_site"
@@ -24,4 +26,14 @@
         android:layout_alignParentEnd="true"
         android:gravity="end"
         android:textAlignment="textEnd" />
+
+    <TextView
+        android:id="@+id/index"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="bottom-left-text"
+        android:layout_below="@+id/postitem_post"
+        android:gravity="end"
+        android:textAlignment="textEnd"
+        android:layout_alignParentStart="true" />
 </RelativeLayout>

@@ -35,9 +35,9 @@ class ReposAdapter extends RecyclerView.Adapter<ViewHolder> {
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Repo repo = repos.get(position);
         holder.setPostText(repo.getName());
-
         holder.setSiteText("StargazersCount: " +
                 String.valueOf(repo.getStargazersCount()));
+        holder.setIndex(String.valueOf(position + 1));
 
     }
 
