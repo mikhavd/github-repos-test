@@ -30,7 +30,7 @@ public class RepoUnitTest {
     public void rxAPITest(){
         RxReposService rxService = new RxReposService(new GithubRetorfitClient());
         RxReposInterface rxRepoApi = rxService.getApi();
-        ReposActivity.loadReposWithContributors(rxRepoApi, this::print, this::printExInfo);
+        ReposActivity.loadReposWithContributors(rxRepoApi, this::print, this::printExInfo, page);
     }
 
     private void printExInfo(HttpException ex){
@@ -47,15 +47,15 @@ public class RepoUnitTest {
             System.out.println("-------------");
             return;
         }
+        reposCount++;
         System.out.println("-------------");
         System.out.println(reposCount + ". " + repo.getName());
         System.out.println("contributors:" );
         for (Contributor contributor : repo.getContributors()){
-            System.out.println("    " + contribsCount +". " + contributor.getLogin());
             contribsCount++;
+            System.out.println("    " + contribsCount +". " + contributor.getLogin());
         }
         contribsCount = 0;
-        reposCount++;
     }
 
     //@Test
