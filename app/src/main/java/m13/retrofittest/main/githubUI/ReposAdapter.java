@@ -11,6 +11,7 @@ import java.util.List;
 import m13.retrofittest.R;
 import m13.retrofittest.main.ViewHolder;
 import m13.retrofittest.main.api.generated.repos.Repo;
+import m13.retrofittest.main.api.repos.RepoWithContributors;
 
 /**
  * Created by Mikhail Avdeev on 11.02.2019.
@@ -18,9 +19,9 @@ import m13.retrofittest.main.api.generated.repos.Repo;
 class ReposAdapter extends RecyclerView.Adapter<ViewHolder> {
 
 
-    private List<Repo> repos;
+    private List<RepoWithContributors> repos;
 
-    ReposAdapter(List<Repo> repos) {
+    ReposAdapter(List<RepoWithContributors> repos) {
         this.repos = repos;
     }
 
@@ -33,13 +34,13 @@ class ReposAdapter extends RecyclerView.Adapter<ViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Repo repo = repos.get(position);
+        RepoWithContributors repo = repos.get(position);
         holder.setPostText(repo.getName());
         holder.setSiteText("★: " +
                 String.valueOf(repo.getStargazersCount()));
         holder.setIndex(String.valueOf(position + 1));
         holder.setCommitsText("Contibutors: " +
-                String.valueOf(repo.getForksCount()));
+                String.valueOf(repo.getContributorsSize()));
 
     }
 

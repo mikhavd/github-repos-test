@@ -34,11 +34,11 @@ public class ReposCallback implements Callback {
             RepoWithContributors repoWithContrubutors =
                     new RepoWithContributors(repo, new ArrayList<Contributor>());
         }
-        activity.get().addRepos(obtainedRepos);
-        String nextLink = HeaderParser.parseHeaderLink(response);
-        if (!nextLink.isEmpty()) {
-            activity.get().loadAdditionalRepos(nextLink);
-        }
+        //activity.get().addRepos(obtainedRepos);
+       // String nextLink = HeaderParser.parseHeaderLink(response);
+       // if (!nextLink.isEmpty()) {
+         //   activity.get().loadAdditionalRepos(nextLink);
+        //}
     }
 
     @Override

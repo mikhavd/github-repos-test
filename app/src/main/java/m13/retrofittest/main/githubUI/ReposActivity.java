@@ -1,5 +1,6 @@
 package m13.retrofittest.main.githubUI;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -9,36 +10,30 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.Observable;
 import m13.retrofittest.R;
 import m13.retrofittest.main.api.GithubRetorfitClient;
-import m13.retrofittest.main.api.generated.contributors.Contributor;
 import m13.retrofittest.main.api.generated.repos.Repo;
 import m13.retrofittest.main.api.repos.RepoType;
 import m13.retrofittest.main.api.repos.RepoWithContributors;
 import m13.retrofittest.main.api.repos.ReposCallback;
 import m13.retrofittest.main.api.repos.ReposInterface;
-import m13.retrofittest.main.api.repos.ReposService;
 import m13.retrofittest.main.api.repos.RxReposInterface;
 import m13.retrofittest.main.api.repos.RxReposService;
 import retrofit2.Call;
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
-import rx.util.functions.Func1;
-
-import static rx.Observable.*;
+import retrofit2.HttpException;
 
 /**
  * Created by Mikhail Avdeev on 11.02.2019.
  */
 public class ReposActivity extends AppCompatActivity {
     RecyclerView recyclerView;
-    List<Repo> repos;
+    //List<Repo> repos;
+    List<RepoWithContributors> extendedRepos;
     private final static String organizationName = "square";
     private final static Integer maxNumberPerPage = 1000;
     private ReposInterface repoApi;
@@ -50,27 +45,28 @@ public class ReposActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         //create and populate adapter
-        repos = new ArrayList<>();
+        extendedRepos = new ArrayList<>();
         recyclerView = findViewById(R.id.posts_recycle_view);
         emptyView = (TextView) findViewById(R.id.empty_view);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        ReposAdapter adapter = new ReposAdapter(repos);
+        ReposAdapter adapter = new ReposAdapter(extendedRepos);
         recyclerView.setAdapter(adapter);
         setRecyclerView();
         try {
-            this.repoApi = new ReposService(new GithubRetorfitClient()).getApi();
+            //this.repoApi = new ReposService(new GithubRetorfitClient()).getApi();
             RxReposService rxService = new RxReposService(new GithubRetorfitClient());
             this.rxRepoApi = rxService.getApi();
-            loadRepos();
+            //loadRepos();
+            loadReposWithContributors(rxRepoApi, this::saveRepo, this::printExInfo);
         } catch (Exception e) {
             Log.d("exception", "exception: " + e.toString());
         }
     }
 
     private void setRecyclerView() {
-        if (repos.isEmpty()){
+        if (extendedRepos.isEmpty()){
             recyclerView.setVisibility(View.GONE);
             emptyView.setVisibility(View.VISIBLE);
         } else{
@@ -91,11 +87,11 @@ public class ReposActivity extends AppCompatActivity {
         call.enqueue(new ReposCallback(getWeakReference()));
     }
 
-    public void addRepos(List<Repo> repos) {
-        this.repos.addAll(repos);
+    /*public void addRepos(List<Repo> repos) {
+        this.extendedRepos.addAll(repos);
         recyclerView.getAdapter().notifyDataSetChanged();
         setRecyclerView();
-    }
+    }*/
 
     //загрузка дополнительных репозиториев, по прямой ссылке
     public void loadAdditionalRepos(String nextLink) {
@@ -111,72 +107,32 @@ public class ReposActivity extends AppCompatActivity {
     }
 
 
-    //не получается, потому что у меня в Observable LISt!
-    public Observable<RepoWithContributors> getRepoWithContributors() throws IOException {
-        RepoType repoType = RepoType.all;
-        Observable<List<Repo>> orgsList = rxRepoApi.organizationRepoList(
-                organizationName,
-                repoType.getRepoTypeName(),
-                null,
-                null,
-                maxNumberPerPage);
-
-
-
-                        new Func1<RepoWithContributors,
-                        Observable<RepoWithContributors>>() {
-                    @Override
-                    public Observable<RepoWithContributors> call(
-                            final RepoWithContributors repoWithContributors) {
-                        return rxRepoApi.getContributorsList(
-                                organizationName,
-                                repoWithContributors.getRepoName(),
-                                maxNumberPerPage)
-                                .flatMap(new Func1<ArrayList<Contributor>,
-                                        Observable<RepoWithContributors>>() {
-                                    @Override
-                                    public Observable<RepoWithContributors> call(ArrayList<Contributor> contributors) {
-                                        repoWithContributors.setContributors(contributors);
-                                        return just(repoWithContributors);
-                                    }
-                                });
-                    }
-                });
+    @SuppressLint("CheckResult")
+    public static void loadReposWithContributors(RxReposInterface rxRepoApi, ILoader loader, IErrorHandler errorHandler) {
+        rxRepoApi.getRepoList()
+                .flatMap(Observable::fromIterable)
+                .flatMap(repo -> rxRepoApi.getContribsList(repo.getName()),
+                        RepoWithContributors::new)
+                .onErrorReturn((Throwable ex) -> {
+                    if (ex instanceof HttpException) errorHandler.handleError((HttpException) ex);
+            //printExInfo(ex.toString()); //examine error here
+            return new RepoWithContributors(null, null); //empty object of the datatype
+        }).subscribe(loader::save, Throwable::printStackTrace);
     }
 
-
-    void test(){
-        RepoType repoType = RepoType.all;
-        List<RepoWithContributors> reposExtended = rxRepoApi.organizationRepoList(
-                organizationName,
-                repoType.getRepoTypeName(),
-                null,
-                null,
-                maxNumberPerPage)
-                .concatMap(Observable::from)
-                .flatMap(item -> rxRepoApi.getContributorsList(
-                                organizationName,
-                                item.getName(),
-                                maxNumberPerPage),
-                        (item, detail) -> new RepoWithContributors(item, detail))
-                .toList();
-
+    private void printExInfo(HttpException ex) {
+        Toast.makeText(
+                this,
+                ex.toString(), Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, string);
     }
 
-
-
-
-
-
-
-
-    /*public Integer loadRepoContributors(Repo repo) {
-        Call<List<Contributor>> call = this.repoApi.getContributorsList(
-                organizationName,
-                repo.getName(),
-                1
-        );
-        call.enqueue(new ContributorsCallback(getWeakReference()));
-        return
-    }*/
+    private void saveRepo(RepoWithContributors repoWithContributors) {
+        if (repoWithContributors.getContributors() == null){
+         //todo
+        }
+        extendedRepos.add(repoWithContributors);
+        recyclerView.getAdapter().notifyDataSetChanged();
+        setRecyclerView();
+    }
 }

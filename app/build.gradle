@@ -38,7 +38,8 @@ dependencies {
     implementation 'org.glassfish:javax.annotation:10.0-b28'
     implementation 'com.github.jitpack:gradle-simple:1.0.5'
     //implementation 'com.github.eclipse:egit-github:v5.0.0.201806131550-r'
-    implementation 'com.netflix.rxjava:rxjava-android:0.16.1'
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.0'
+    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.5.0'
 
     //implementation 'com.github.eclipse:egit-github:v5.2.0.201812061821-r'
 

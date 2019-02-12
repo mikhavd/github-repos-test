@@ -25,4 +25,20 @@ public class RepoWithContributors {
     public String getRepoName() {
         return repo.getName();
     }
+
+    public String getName() {
+        return this.repo.getName();
+    }
+
+    public int getStargazersCount() {
+        return this.repo.getStargazersCount();
+    }
+
+    public Integer getContributorsSize() {
+        return this.contributors.size();
+    }
+
+    public List<Contributor> getContributors() {
+        return contributors;
+    }
 }

@@ -96,6 +96,174 @@ private class Combined {
             }
         });
 
+МОЖЕТ БЫТЬ ВОЗМОЖНО ОБЪЕДИНИТЬ ДВА ЗАПРОСА 
+
+---------------------------------------------
+LAMBDAS+JAVARX
+---------------------------------------------
+Observable.just("Hello, world!")
+    .map(new Func1<String, String>() {
+        @Override
+        public String call(String s) {
+            return s + " -Dan";
+        }
+    })
+    .subscribe(s -> System.out.println(s));
+
+Observable.just("Hello, world!")
+    .map(s -> s + " -Dan")
+    .subscribe(s -> System.out.println(s));
+    
+нтересным свойством map() является то, что он не обязан порождать данные того же самого типа, что и исходный Observable.
+Допустим, что наш Subscriber должен выводить не порождаемый текст, а его хэш:
+
+Observable.just("Hello, world!")
+    .map(new Func1<String, Integer>() {
+        @Override
+        public Integer call(String s) {
+            return s.hashCode();
+        }
+    })
+    .subscribe(i -> System.out.println(Integer.toString(i)));
+
+Observable.just("Hello, world")
+    .map(s -> s.hashCode(s))
+    .subscribe(i -> System.out.println(Integer.toString(i)));
+
+Observable.just("Hello, world")
+    .map(s -> s.hashCode(s))
+    .map(i -> Integer.toString(i))
+    .subscribe(s -> System.out.println(s))
+
+
+------------------------------
+
+private void getMovieListingsWithImages() {
+    Observer<MovieResponse> observer = new Observer<MovieResponse>() {
+        @Override
+        public void onSubscribe(Disposable d) {
+            Toast.makeText(getApplicationContext(), "", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onNext(MovieResponse movieResponse) {
+            //for each movie response make a call to the API which provides the image for the movie
+        }
+
+        @Override
+        public void onError(Throwable e) {
+            Toast.makeText(getApplicationContext(), "Error getting image for the movie", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onComplete() {
+            Toast.makeText(getApplicationContext(), "Finished getting images for all the movies in the stream", Toast.LENGTH_SHORT).show();
+        }
+    };
+
+    getAPI().getRepos()
+            // converts your list of movieResponse into and observable which emits one movieResponse object at a time.
+            .flatMapIterable(responseList -> mresponseList) 
+            // method converts the each movie response object into an observable
+            .flatMap(this::getObservableFromString) 
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(observer);
+}
+
+
+private Observable<MovieResponse> getObservableFromString(MovieResponse movieResponse) {
+    return Observable.just(movieResponse);
+}
+
+ getAPI().getRepos().concatMap(Observable::from)
+            .flatMap(item -> someOtherService.getDetails(item.somedetail), (item, detail) -> new ExtendedItem(item, detail))
+            .toList()
+...
+
+
+
+
+
+
+
+
+gerRepos
+    .flatMap(new Func1<List<String>, Observable<String>>() {
+        @Override
+        public Observable<String> call(List<String> urls) {
+            return Observable.from(urls);
+        }
+    })
+    .subscribe(repoWithContributors -> addRepo(repoWithContributors));
+
+    
+    //MY ATTEMTP!
+public void getRepoWithContributors() throws IOException {
+        rxRepoApi.getRepoList()
+        .flatMap(Observable::from)
+        .flatMap((Func1<Repo, Observable<List<Contributor>>>) repo -> rxRepoApi.getContribsList(repo.getName()))
+        .flatMap((Func1<List<Contributor>, Observable<RepoWithContributors>>) contributors -> new RepoWithContributors(repo, contributors))
+        .subscribe(this::addRepo);
+    }
+
+
+
+//MY ATTEMTP 2!
+ public void getRepoWithContributors() {
+        rxRepoApi.getRepoList()
+            .flatMap(Observable::from)
+            .flatMap(
+                repo -> new RepoWithContributors(repo,
+                            rxRepoApi.getContribsList(repo.getName())
+                                    .map(contributors -> contributors)
+
+                    ))
+            .subscribe(this::addRepo());
+    }
+
+    
+    rxRepoApi.getRepoList()
+       .flatMap(repos -> Observable.fromIterable(repos)) //.flatMap(Observable::from)
+       .flatMap(
+               repo -> rxRepoApi.getContribsList(repo.getName()),
+               (repo, contributors) -> {
+                   return new RepoWithContributors(repo, contributors);
+               })
+       .subscribe(user -> saveUser(user));
+
+
+
+
+
+
+
+rxRepoApi.getRepoList()
+       .flatMap(new Function<List<Repo>, ObservableSource<List>>() {
+           @Override
+           public ObservableSource<Repo> apply(List<Repo> repos) throws Exception {
+               return Observable.fromIterable(repos);
+           }
+       })
+       .flatMap(
+               new Function<Repo, ObservableSource<List<Contributor>>>() {
+                   @Override
+                   public ObservableSource<List<Contributor>> apply(Repo repo) throws Exception {
+                       return rxRepoApi.getContribs(repo.getName());
+                   }
+               }, new BiFunction<Repo, List<Contributor>, RepoWithContributors>() {
+                   @Override
+                   public RepoWithContributors apply(Repo repo, 
+                       List<Contributor> contributors) throws Exception {
+                       return new RepoWithContributors(repo, contributors);
+                   }
+               })
+       .subscribe(new Consumer<RepoWithContributors>() {
+           @Override
+           public void accept(RepoWithContributors repoWithContributors) throws Exception {
+               //saveUser(user);
+           }
+       });
 
 
 
@@ -137,3 +305,4 @@ private class Combined {
 
 
 
+    

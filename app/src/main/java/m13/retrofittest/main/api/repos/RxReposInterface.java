@@ -2,13 +2,13 @@ package m13.retrofittest.main.api.repos;
 
 import java.util.List;
 
+import io.reactivex.Observable;
 import m13.retrofittest.main.api.generated.contributors.Contributor;
 import m13.retrofittest.main.api.generated.repos.Repo;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
-import rx.Observable;
 
 /**
  * Created by Mikhail Avdeev on 11.02.2019.
@@ -27,11 +27,23 @@ public interface RxReposInterface {
                 @Query("direction") Integer order,
                 @Query("per_page") Integer maxNumberOfRepos);
 
+
     //https://api.github.com/repos/square/wire/contributors
     @GET("repos/{org}/{repo}/contributors")
     Observable<List<Contributor>> getContributorsList(
             @Path("org") String organization,
             @Path("repo") String repo,
             @Query("per_page") Integer maxNumberOfContributors
+    );
+
+
+
+    @GET("orgs/square/repos")
+    Observable<List<Repo>> getRepoList();
+
+
+    @GET("repos/square/{repo}/contributors")
+    Observable<List<Contributor>> getContribsList(
+            @Path("repo") String repo
     );
 }
