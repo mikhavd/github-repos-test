@@ -30,7 +30,7 @@ public class RepoUnitTest {
     public void rxAPITest(){
         RxReposService rxService = new RxReposService(new GithubRetorfitClient());
         RxReposInterface rxRepoApi = rxService.getApi();
-        ReposActivity.loadReposWithContributors(rxRepoApi, this::print, this::printExInfo, page);
+        ReposActivity.loadReposWithContributors(rxRepoApi, this::print, this::printExInfo);
     }
 
     private void printExInfo(HttpException ex){

@@ -15,8 +15,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
+import io.reactivex.functions.Function;
 import m13.retrofittest.R;
 import m13.retrofittest.main.api.GithubRetorfitClient;
+import m13.retrofittest.main.api.generated.contributors.Contributor;
 import m13.retrofittest.main.api.generated.repos.Repo;
 import m13.retrofittest.main.api.repos.RepoType;
 import m13.retrofittest.main.api.repos.RepoWithContributors;
@@ -109,9 +112,17 @@ public class ReposActivity extends AppCompatActivity {
 
     @SuppressLint("CheckResult")
     public static void loadReposWithContributors(RxReposInterface rxRepoApi, ILoader loader, IErrorHandler errorHandler) {
+        Function<Repo, Observable<List<Contributor>>> contibsList = new Function<Repo, Observable<List<Contributor>>>() {
+            @Override
+            public Observable<List<Contributor>> apply(Repo repo){
+                return rxRepoApi.getContribsList(repo.getName());
+            }
+        };
         rxRepoApi.getRepoList()
+                //функция разбирает Observable<List<Repo>> на перебор Repo
                 .flatMap(Observable::fromIterable)
-                .flatMap(repo -> rxRepoApi.getContribsList(repo.getName()),
+                //функция получает список всех контрибуторов проекта
+                .flatMap(contibsList,
                         RepoWithContributors::new)
                 .onErrorReturn((Throwable ex) -> {
                     if (ex instanceof HttpException) errorHandler.handleError((HttpException) ex);
