@@ -122,11 +122,11 @@ public class ReposActivity extends AppCompatActivity {
                 //функция разбирает Observable<List<Repo>> на перебор Repo
                 .flatMap(Observable::fromIterable)
                 //функция получает список всех контрибуторов проекта
-                .flatMap(contibsList,
-                        RepoWithContributors::new)
+                .flatMap(repo -> rxRepoApi.getContribsList(repo.getName()),
+                        //создаём объект new RepoWithContributors
+                        (repo1, contributors) -> new RepoWithContributors(repo1, contributors))
                 .onErrorReturn((Throwable ex) -> {
                     if (ex instanceof HttpException) errorHandler.handleError((HttpException) ex);
-            //printExInfo(ex.toString()); //examine error here
             return new RepoWithContributors(null, null); //empty object of the datatype
         }).subscribe(loader::save, Throwable::printStackTrace);
     }
