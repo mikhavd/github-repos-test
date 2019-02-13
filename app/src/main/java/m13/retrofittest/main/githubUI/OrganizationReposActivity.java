@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,12 +18,15 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import m13.retrofittest.R;
 import m13.retrofittest.main.api.GithubRetorfitClient;
+import m13.retrofittest.main.api.HeaderParser;
 import m13.retrofittest.main.api.generated.contributors.Contributor;
+import m13.retrofittest.main.api.generated.repos.Repo;
 import m13.retrofittest.main.api.repos.RepoWithContributors;
 import m13.retrofittest.main.api.repos.ReposInterface;
-import m13.retrofittest.main.api.repos.RxReposInterface;
-import m13.retrofittest.main.api.repos.RxReposService;
+import m13.retrofittest.main.api.services.RxReposInterface;
+import m13.retrofittest.main.api.services.RxReposService;
 import retrofit2.HttpException;
+import retrofit2.Response;
 
 /**
  * Created by Mikhail Avdeev on 11.02.2019.
@@ -57,7 +59,8 @@ public class OrganizationReposActivity extends AppCompatActivity
             //this.repoApi = new ReposService(new GithubRetorfitClient()).getApi();
             RxReposService rxService = new RxReposService(new GithubRetorfitClient());
             this.rxRepoApi = rxService.getApi();
-            loadReposWithContributors(rxRepoApi, this::saveRepo, this::handleException);
+            //loadReposWithContributors(rxRepoApi, this::saveRepo, this::handleException);
+            loadExtendedReposFromPages(rxRepoApi, this::saveRepo, this::handleException);
         } catch (Exception e) {
             emptyView.setText("Ошибка при загрузке данных: " + e.toString());
             Toast.makeText(
@@ -131,4 +134,67 @@ public class OrganizationReposActivity extends AppCompatActivity
             this.startActivity(intent);
         }
     }
+
+    static Observable<Response<List<Repo>>> getRepoPageAndAllNext(RxReposInterface rxRepoApi) {
+        return rxRepoApi.getPageWithRepoList()
+                .concatMap(
+                        response -> {
+                            String linkToNextPage = HeaderParser.getLinkToNextPage(response); //response.headers().get("next");
+                            if ((linkToNextPage == null) || linkToNextPage.isEmpty())
+                                return Observable.just(response);
+                            else
+                                return Observable.just(response)
+                                        .concatWith(rxRepoApi.responceWithRepoListByLink(linkToNextPage));
+                        });
+    }
+
+    static Observable<List<Repo>> getObservableRepos(RxReposInterface rxRepoApi) {
+        return getRepoPageAndAllNext(rxRepoApi)
+        .concatMap(response -> Observable.just(response.body()));
+    }
+
+    static Observable<Response<List<Contributor>>> getContributorsPageAndAllNext(RxReposInterface rxRepoApi, String repoName) {
+        return rxRepoApi.getPageWithContributorsList(repoName)
+        .concatMap(
+        response -> {
+            String linkToNextPage = HeaderParser.getLinkToNextPage(response); //response.headers().get("next");
+            if ((linkToNextPage == null) || linkToNextPage.isEmpty())
+                return Observable.just(response);
+            else
+                return Observable.just(response)
+                        .concatWith(rxRepoApi.responceWithContributorsListByLink(linkToNextPage));
+        });
+    }
+
+    static Observable<List<Contributor>> getObservableContributors(RxReposInterface rxRepoApi, String repoName) {
+        return getContributorsPageAndAllNext(rxRepoApi, repoName)
+                .concatMap(response -> Observable.just(response.body()));
+    }
+
+
+    @SuppressLint("CheckResult")
+    public static void loadExtendedReposFromPages(RxReposInterface rxRepoApi, ILoader loader,
+                                                 IErrorHandler errorHandler) {
+        getObservableRepos(rxRepoApi)
+                //разбираем Observable<List<Repo>> на перебор Repo
+                .flatMap(Observable::fromIterable)
+                //в этом flatMap используется сигнатура с двумя функциями:
+                //вторая (создание RepoWithContributors) использует результат первой (getContribsList)
+                //
+                .flatMap(
+                        //получаем список всех контрибуторов проекта
+                        repo -> getObservableContributors(rxRepoApi, repo.getName()),
+                        //создаём объект new RepoWithContributors
+                        (repo1, contributors) -> new RepoWithContributors(repo1, contributors))
+                .onErrorReturn((Throwable ex) ->
+                {
+                    errorHandler.handleError((Exception) ex);
+                    //empty object of the datatype
+                    return new RepoWithContributors(null, null);
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(loader::save, Throwable::printStackTrace);
+    }
+
 }

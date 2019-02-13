@@ -1,4 +1,4 @@
-package m13.retrofittest.main.api.repos;
+package m13.retrofittest.main.api.services;
 
 import m13.retrofittest.main.api.ApiService;
 import m13.retrofittest.main.api.GithubRetorfitClient;

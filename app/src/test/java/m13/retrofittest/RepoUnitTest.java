@@ -5,8 +5,8 @@ import org.junit.Test;
 import m13.retrofittest.main.api.GithubRetorfitClient;
 import m13.retrofittest.main.api.generated.contributors.Contributor;
 import m13.retrofittest.main.api.repos.RepoWithContributors;
-import m13.retrofittest.main.api.repos.RxReposInterface;
-import m13.retrofittest.main.api.repos.RxReposService;
+import m13.retrofittest.main.api.services.RxReposInterface;
+import m13.retrofittest.main.api.services.RxReposService;
 import m13.retrofittest.main.githubUI.OrganizationReposActivity;
 import retrofit2.HttpException;
 
@@ -27,7 +27,14 @@ public class RepoUnitTest {
     private Integer contribsCount = 0;
 
     @Test
-    public void rxAPITest(){
+    public void rxAPITestPages(){
+        RxReposService rxService = new RxReposService(new GithubRetorfitClient());
+        RxReposInterface rxRepoApi = rxService.getApi();
+        OrganizationReposActivity.loadExtendedReposFromPages(rxRepoApi, this::print, this::printExInfo);
+    }
+
+    @Test
+    public void rxAPITestSinglePage(){
         RxReposService rxService = new RxReposService(new GithubRetorfitClient());
         RxReposInterface rxRepoApi = rxService.getApi();
         OrganizationReposActivity.loadReposWithContributors(rxRepoApi, this::print, this::printExInfo);

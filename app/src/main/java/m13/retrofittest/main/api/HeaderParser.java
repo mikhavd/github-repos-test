@@ -12,7 +12,7 @@ public class HeaderParser {
     private static final String SEPARATOR = ","; //$NON-NLS-1$
     private static final String DOUBLE_SEPARATOR = ";"; //$NON-NLS-1$
 
-    public static String parseHeaderLink(Response response) {
+    public static String getLinkToNextPage(Response response) {
         Headers headers = response.headers();
         String linkHeader = headers.get("link");
         String next = "";
