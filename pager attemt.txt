@@ -1,0 +1,30 @@
+  @SuppressLint("CheckResult")
+    public static void loadReposWithContributors(
+            RxReposInterface rxRepoApi,
+            ILoader loader,
+            IErrorHandler errorHandler) {
+        repoPage(rxRepoApi)
+        .onErrorReturn((Throwable ex) -> {
+            errorHandler.handleError((Exception) ex);
+            //empty object of the datatype
+            return new RepoWithContributors(null, null);
+        })
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribeOn(Schedulers.io())
+        .subscribe(loader::save, Throwable::printStackTrace);
+    }
+
+    private static Observable<RepoWithContributors> repoPage(RxReposInterface rxRepoApi){
+        return  rxRepoApi.getRepoList()
+        //разбираем Observable<List<Repo>> на перебор Repo
+        .flatMap(Observable::fromIterable)
+        //в этом flatMap используется сигнатура с двумя функциями:
+        //вторая (создание RepoWithContributors) использует результат первой (getContribsList)
+        //
+        .flatMap(
+                //получаем список всех контрибуторов проекта
+                repo -> rxRepoApi.getContribsList(repo.getName()),
+                //создаём объект new RepoWithContributors
+                (repo1, contributors) ->
+                        new RepoWithContributors(repo1, contributors));
+    }

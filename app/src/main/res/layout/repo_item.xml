@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:padding="5dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/main_text_item"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="main text"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginLeft="0dp"
+
+        android:textColor="?android:attr/textColorPrimary" />
+
+
+    <TextView
+        android:id="@+id/top_right_item"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="top right"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginLeft="0dp"
+
+        android:textColor="?android:attr/textColorPrimary" />
+
+    <TextView
+        android:id="@+id/bottom_rigth_item"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="bottom-right-text"
+        android:layout_below="@+id/main_text_item"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:gravity="end"
+        android:textAlignment="textEnd" />
+
+    <TextView
+        android:id="@+id/bottom_left_item"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="bottom-left-text"
+        android:layout_below="@+id/main_text_item"
+        android:gravity="end"
+        android:textAlignment="textEnd"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true" />
+</RelativeLayout>
