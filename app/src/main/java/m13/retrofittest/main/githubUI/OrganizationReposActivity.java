@@ -11,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import io.reactivex.Observable;
@@ -115,10 +116,22 @@ public class OrganizationReposActivity extends AppCompatActivity
                 exInfo, Toast.LENGTH_SHORT).show();
     }
 
-    private void saveRepo(RepoWithContributors repoWithContributors) {
+    private void saveRepo(RepoWithContributors repoToSave) {
         //todo
-        if (repoWithContributors.getContributors() == null) return;
-        extendedRepos.add(repoWithContributors);
+        if (repoToSave.getContributors() == null) return;
+        for (int i = 0; i < extendedRepos.size(); i++) {
+            RepoWithContributors savedRepo = extendedRepos.get(i);
+            if (savedRepo.getName().equals(repoToSave.getName())) {
+                List<Contributor> newList = new ArrayList<>(savedRepo.getContributors());
+                newList.addAll(repoToSave.getContributors());
+                repoToSave.setContributors(newList);
+                extendedRepos.set(i, repoToSave);
+                recyclerView.getAdapter().notifyDataSetChanged();
+                setRecyclerView();
+                return;
+            }
+        }
+        extendedRepos.add(repoToSave);
         recyclerView.getAdapter().notifyDataSetChanged();
         setRecyclerView();
     }
