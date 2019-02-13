@@ -14,8 +14,7 @@
         android:name=".main.githubUI.GithubApp"
         tools:ignore="GoogleAppIndexingWarning"
         android:fullBackupContent="@xml/backup_descriptor">
-        <activity android:name=".main.umoriliUI.UmoriliMainActivity" >
-        </activity>
+
         <activity android:name=".main.githubUI.ReposActivity">
         <intent-filter>
             <action android:name="android.intent.action.MAIN" />

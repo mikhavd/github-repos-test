@@ -5,35 +5,29 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
-import io.reactivex.ObservableSource;
-import io.reactivex.functions.Function;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 import m13.retrofittest.R;
 import m13.retrofittest.main.api.GithubRetorfitClient;
-import m13.retrofittest.main.api.generated.contributors.Contributor;
-import m13.retrofittest.main.api.generated.repos.Repo;
-import m13.retrofittest.main.api.repos.RepoType;
 import m13.retrofittest.main.api.repos.RepoWithContributors;
-import m13.retrofittest.main.api.repos.ReposCallback;
 import m13.retrofittest.main.api.repos.ReposInterface;
 import m13.retrofittest.main.api.repos.RxReposInterface;
 import m13.retrofittest.main.api.repos.RxReposService;
-import retrofit2.Call;
 import retrofit2.HttpException;
 
 /**
  * Created by Mikhail Avdeev on 11.02.2019.
  */
-public class ReposActivity extends AppCompatActivity {
+public class ReposActivity extends AppCompatActivity
+        implements RecyclerViewClickListener{
     RecyclerView recyclerView;
     //List<Repo> repos;
     List<RepoWithContributors> extendedRepos;
@@ -51,20 +45,21 @@ public class ReposActivity extends AppCompatActivity {
         extendedRepos = new ArrayList<>();
         recyclerView = findViewById(R.id.posts_recycle_view);
         emptyView = (TextView) findViewById(R.id.empty_view);
-
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        ReposAdapter adapter = new ReposAdapter(extendedRepos);
+        ReposAdapter adapter = new ReposAdapter(this, this, extendedRepos);
         recyclerView.setAdapter(adapter);
         setRecyclerView();
         try {
             //this.repoApi = new ReposService(new GithubRetorfitClient()).getApi();
             RxReposService rxService = new RxReposService(new GithubRetorfitClient());
             this.rxRepoApi = rxService.getApi();
-            //loadRepos();
             loadReposWithContributors(rxRepoApi, this::saveRepo, this::printExInfo);
         } catch (Exception e) {
-            Log.d("exception", "exception: " + e.toString());
+            emptyView.setText("Ошибка при загрузке данных: " + e.toString());
+            Toast.makeText(
+                    this,
+                    "exception: " + e.toString(), Toast.LENGTH_SHORT).show(); //Log.d("exception", );
         }
     }
 
@@ -78,60 +73,34 @@ public class ReposActivity extends AppCompatActivity {
         }
     }
 
-    //"оригинальная" загрузка списка репозиториев
-    void loadRepos() {
-        RepoType repoType = RepoType.all;
-        Call<List<Repo>> call = this.repoApi.organizationRepoList(
-                organizationName,
-                repoType.getRepoTypeName(),
-                null,
-                null,
-                maxNumberPerPage);
-        call.enqueue(new ReposCallback(getWeakReference()));
-    }
-
-    /*public void addRepos(List<Repo> repos) {
-        this.extendedRepos.addAll(repos);
-        recyclerView.getAdapter().notifyDataSetChanged();
-        setRecyclerView();
-    }*/
-
-    //загрузка дополнительных репозиториев, по прямой ссылке
-    public void loadAdditionalRepos(String nextLink) {
-        Toast.makeText(
-                this,
-                "loadingAdditionalRepos, link: " + nextLink, Toast.LENGTH_SHORT).show();
-        Call<List<Repo>> call = this.repoApi.organizationRepoListByLink(nextLink);
-        call.enqueue(new ReposCallback(getWeakReference()));
-    }
-
-    WeakReference<ReposActivity> getWeakReference(){
-        return new WeakReference<>(this);
-    }
-
 
     @SuppressLint("CheckResult")
-    public static void loadReposWithContributors(RxReposInterface rxRepoApi, ILoader loader, IErrorHandler errorHandler) {
-        Function<Repo, Observable<List<Contributor>>> contibsList = new Function<Repo, Observable<List<Contributor>>>() {
-            @Override
-            public Observable<List<Contributor>> apply(Repo repo){
-                return rxRepoApi.getContribsList(repo.getName());
-            }
-        };
+    public void loadReposWithContributors(RxReposInterface rxRepoApi, ILoader loader, IErrorHandler errorHandler) {
         rxRepoApi.getRepoList()
-                //функция разбирает Observable<List<Repo>> на перебор Repo
+                //разбираем Observable<List<Repo>> на перебор Repo
                 .flatMap(Observable::fromIterable)
-                //функция получает список всех контрибуторов проекта
-                .flatMap(repo -> rxRepoApi.getContribsList(repo.getName()),
+                //в этом flatMap используется сигнатура с двумя функциями:
+                //вторая (создание RepoWithContributors) использует результат первой (getContribsList)
+                //
+                .flatMap(
+                        //получаем список всех контрибуторов проекта
+                        repo -> rxRepoApi.getContribsList(repo.getName()),
                         //создаём объект new RepoWithContributors
                         (repo1, contributors) -> new RepoWithContributors(repo1, contributors))
-                .onErrorReturn((Throwable ex) -> {
+                .onErrorReturn((Throwable ex) ->
+                {
                     if (ex instanceof HttpException) errorHandler.handleError((HttpException) ex);
+                    else
+                        this.emptyView.setText(ex.toString());
             return new RepoWithContributors(null, null); //empty object of the datatype
-        }).subscribe(loader::save, Throwable::printStackTrace);
+        })
+        .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(loader::save, Throwable::printStackTrace);
     }
 
     private void printExInfo(HttpException ex) {
+        emptyView.setText(ex.toString());
         Toast.makeText(
                 this,
                 ex.toString(), Toast.LENGTH_SHORT).show();
@@ -139,11 +108,22 @@ public class ReposActivity extends AppCompatActivity {
     }
 
     private void saveRepo(RepoWithContributors repoWithContributors) {
-        if (repoWithContributors.getContributors() == null){
+        if (repoWithContributors.getContributors() == null) {
          //todo
+            return;
         }
         extendedRepos.add(repoWithContributors);
         recyclerView.getAdapter().notifyDataSetChanged();
         setRecyclerView();
+    }
+
+    @Override
+    public void recycleViewListClicked(View v, int position) {
+        RepoWithContributors selectedRepo = extendedRepos.get(position);
+        Toast.makeText(
+                this,
+                selectedRepo.getName(), Toast.LENGTH_SHORT).show();
+        //Intent intent = new Intent(this, ElementActivity.class);
+        //this.startActivity(intent);
     }
 }

@@ -1,4 +1,4 @@
-package m13.retrofittest.main;
+package m13.retrofittest.main.githubUI;
 
 import android.support.v7.widget.RecyclerView;
 import android.text.Spanned;
