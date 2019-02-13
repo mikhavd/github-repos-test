@@ -1,10 +1,12 @@
 package m13.retrofittest.main.githubUI;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -17,6 +19,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import m13.retrofittest.R;
 import m13.retrofittest.main.api.GithubRetorfitClient;
+import m13.retrofittest.main.api.generated.contributors.Contributor;
 import m13.retrofittest.main.api.repos.RepoWithContributors;
 import m13.retrofittest.main.api.repos.ReposInterface;
 import m13.retrofittest.main.api.repos.RxReposInterface;
@@ -26,8 +29,8 @@ import retrofit2.HttpException;
 /**
  * Created by Mikhail Avdeev on 11.02.2019.
  */
-public class ReposActivity extends AppCompatActivity
-        implements RecyclerViewClickListener{
+public class OrganizationReposActivity extends AppCompatActivity
+        implements RecyclerViewClickListener {
     RecyclerView recyclerView;
     //List<Repo> repos;
     List<RepoWithContributors> extendedRepos;
@@ -47,14 +50,14 @@ public class ReposActivity extends AppCompatActivity
         emptyView = (TextView) findViewById(R.id.empty_view);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        ReposAdapter adapter = new ReposAdapter(this, this, extendedRepos);
+        ReposAdapter adapter = new ReposAdapter(this, extendedRepos);
         recyclerView.setAdapter(adapter);
         setRecyclerView();
         try {
             //this.repoApi = new ReposService(new GithubRetorfitClient()).getApi();
             RxReposService rxService = new RxReposService(new GithubRetorfitClient());
             this.rxRepoApi = rxService.getApi();
-            loadReposWithContributors(rxRepoApi, this::saveRepo, this::printExInfo);
+            loadReposWithContributors(rxRepoApi, this::saveRepo, this::handleException);
         } catch (Exception e) {
             emptyView.setText("Ошибка при загрузке данных: " + e.toString());
             Toast.makeText(
@@ -64,10 +67,10 @@ public class ReposActivity extends AppCompatActivity
     }
 
     private void setRecyclerView() {
-        if (extendedRepos.isEmpty()){
+        if (extendedRepos.isEmpty()) {
             recyclerView.setVisibility(View.GONE);
             emptyView.setVisibility(View.VISIBLE);
-        } else{
+        } else {
             emptyView.setVisibility(View.GONE);
             recyclerView.setVisibility(View.VISIBLE);
         }
@@ -75,7 +78,8 @@ public class ReposActivity extends AppCompatActivity
 
 
     @SuppressLint("CheckResult")
-    public void loadReposWithContributors(RxReposInterface rxRepoApi, ILoader loader, IErrorHandler errorHandler) {
+    public static void loadReposWithContributors(RxReposInterface rxRepoApi, ILoader loader,
+                                                 IErrorHandler errorHandler) {
         rxRepoApi.getRepoList()
                 //разбираем Observable<List<Repo>> на перебор Repo
                 .flatMap(Observable::fromIterable)
@@ -89,29 +93,28 @@ public class ReposActivity extends AppCompatActivity
                         (repo1, contributors) -> new RepoWithContributors(repo1, contributors))
                 .onErrorReturn((Throwable ex) ->
                 {
-                    if (ex instanceof HttpException) errorHandler.handleError((HttpException) ex);
-                    else
-                        this.emptyView.setText(ex.toString());
-            return new RepoWithContributors(null, null); //empty object of the datatype
-        })
-        .observeOn(AndroidSchedulers.mainThread())
+                    errorHandler.handleError((Exception) ex);
+                    //empty object of the datatype
+                    return new RepoWithContributors(null, null);
+                })
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(loader::save, Throwable::printStackTrace);
     }
 
-    private void printExInfo(HttpException ex) {
-        emptyView.setText(ex.toString());
-        Toast.makeText(
-                this,
-                ex.toString(), Toast.LENGTH_SHORT).show();
-        //Toast.makeText(this, string);
+    private void handleException(Exception ex) {
+        String exInfo = ex.toString() +
+                ((ex instanceof HttpException)
+                        ? ". " + ((HttpException) ex).message()
+                        : "");
+        emptyView.setText(exInfo);
+        Toast.makeText(this,
+                exInfo, Toast.LENGTH_SHORT).show();
     }
 
     private void saveRepo(RepoWithContributors repoWithContributors) {
-        if (repoWithContributors.getContributors() == null) {
-         //todo
-            return;
-        }
+        //todo
+        if (repoWithContributors.getContributors() == null) return;
         extendedRepos.add(repoWithContributors);
         recyclerView.getAdapter().notifyDataSetChanged();
         setRecyclerView();
@@ -120,10 +123,12 @@ public class ReposActivity extends AppCompatActivity
     @Override
     public void recycleViewListClicked(View v, int position) {
         RepoWithContributors selectedRepo = extendedRepos.get(position);
-        Toast.makeText(
-                this,
-                selectedRepo.getName(), Toast.LENGTH_SHORT).show();
-        //Intent intent = new Intent(this, ElementActivity.class);
-        //this.startActivity(intent);
+        if (selectedRepo != null) {
+            //Toast.makeText(this, selectedRepo.getName(), Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(this, RepoActivity.class);
+            GithubApp app = (GithubApp) getApplicationContext();
+            app.setSelectedRepo(selectedRepo);
+            this.startActivity(intent);
+        }
     }
 }

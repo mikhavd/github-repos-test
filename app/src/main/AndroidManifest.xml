@@ -15,12 +15,13 @@
         tools:ignore="GoogleAppIndexingWarning"
         android:fullBackupContent="@xml/backup_descriptor">
 
-        <activity android:name=".main.githubUI.ReposActivity">
+        <activity android:name=".main.githubUI.OrganizationReposActivity">
         <intent-filter>
             <action android:name="android.intent.action.MAIN" />
             <category android:name="android.intent.category.LAUNCHER" />
         </intent-filter>
         </activity>
+        <activity android:name=".main.githubUI.RepoActivity" />
     </application>
 
 </manifest>

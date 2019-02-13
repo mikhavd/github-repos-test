@@ -7,7 +7,7 @@ import m13.retrofittest.main.api.generated.contributors.Contributor;
 import m13.retrofittest.main.api.repos.RepoWithContributors;
 import m13.retrofittest.main.api.repos.RxReposInterface;
 import m13.retrofittest.main.api.repos.RxReposService;
-import m13.retrofittest.main.githubUI.ReposActivity;
+import m13.retrofittest.main.githubUI.OrganizationReposActivity;
 import retrofit2.HttpException;
 
 /**
@@ -30,13 +30,14 @@ public class RepoUnitTest {
     public void rxAPITest(){
         RxReposService rxService = new RxReposService(new GithubRetorfitClient());
         RxReposInterface rxRepoApi = rxService.getApi();
-        ReposActivity.loadReposWithContributors(rxRepoApi, this::print, this::printExInfo);
+        OrganizationReposActivity.loadReposWithContributors(rxRepoApi, this::print, this::printExInfo);
     }
 
-    private void printExInfo(HttpException ex){
+    private void printExInfo(Exception ex){
         System.out.println("-------------");
         System.out.println("ex: " + ex.toString());
-        System.out.println("    message: " + ex.message());
+        if (ex instanceof HttpException)
+            System.out.println("    message: " + ((HttpException)ex).message());
         System.out.println("-------------");
     }
 

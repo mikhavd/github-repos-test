@@ -9,21 +9,22 @@ import android.view.ViewGroup;
 import java.util.List;
 
 import m13.retrofittest.R;
-import m13.retrofittest.main.api.repos.RepoWithContributors;
+import m13.retrofittest.main.api.generated.contributors.Contributor;
 
 /**
- * Created by Mikhail Avdeev on 11.02.2019.
+ * Created by Mikhail Avdeev on 13.02.2019.
  */
-class ReposAdapter extends RecyclerView.Adapter<BasicViewHolder> {
+class ContributorsAdapter extends RecyclerView.Adapter<BasicViewHolder> {
 
 
     private final RecyclerViewClickListener itemListener;
-    private List<RepoWithContributors> repos;
+    private List<Contributor> contributorList;
 
-    ReposAdapter(RecyclerViewClickListener itemListener,
-                 List<RepoWithContributors> repos) {
+
+    ContributorsAdapter(RecyclerViewClickListener itemListener,
+                        List<Contributor> contributorList) {
         this.itemListener = itemListener;
-        this.repos = repos;
+        this.contributorList = contributorList;
     }
 
     @NonNull
@@ -35,20 +36,19 @@ class ReposAdapter extends RecyclerView.Adapter<BasicViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull BasicViewHolder holder, int position) {
-        RepoWithContributors repo = repos.get(position);
-        holder.setMainText(repo.getName());
-        holder.setBottomRightText("★: " +
-                String.valueOf(repo.getStargazersCount()));
+        Contributor contributor = contributorList.get(position);
+        holder.setMainText(contributor.getLogin());
         holder.setBottomLeftText(String.valueOf(position + 1));
-        holder.setTopRightText("Contibutors: " +
-                String.valueOf(repo.getContributorsSize()));
-
+        holder.setTopRightText("Contributions: " +
+                String.valueOf(contributor.getContributions()));
+        holder.setBottomRightText("");
     }
 
     @Override
     public int getItemCount() {
-        if (repos == null)
+        if (contributorList == null)
             return 0;
-        return repos.size();
+        return contributorList.size();
     }
+
 }
