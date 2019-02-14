@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -27,9 +28,13 @@ public class GithubRetorfitClient {
 
     static private Retrofit initRetrofit(){
         // Add the interceptor to OkHttpClient
-        OkHttpClient client = new OkHttpClient();
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
 
-        //client.interceptors().add(requestInterceptor);
+        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+        httpClient.addInterceptor(logging);
+
+        //httpClient.interceptors().add(requestInterceptor);
 
         //custom Gson parser instance
         Gson gson = new GsonBuilder()
@@ -40,6 +45,7 @@ public class GithubRetorfitClient {
                 .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .client(httpClient.build())
                 .build();
 
         return retrofit;
