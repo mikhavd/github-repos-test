@@ -8,6 +8,7 @@ import retrofit2.Response;
 /**
  * Created by Mikhail Avdeev on 14.02.2019.
  */
+//класс, "склеивающий" ответы из нескольких страниц
 public class PagesConcatinator<T> {
 
     private final ApiRequester<T> apiRequester;

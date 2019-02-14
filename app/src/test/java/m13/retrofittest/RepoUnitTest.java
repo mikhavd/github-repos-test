@@ -30,15 +30,9 @@ public class RepoUnitTest {
     public void rxAPITestPages(){
         RxReposService rxService = new RxReposService(new GithubRetorfitClient());
         RxReposInterface rxRepoApi = rxService.getApi();
-        OrganizationReposActivity.loadExtendedReposFromPages(rxRepoApi, this::print, this::printExInfo);
+        //OrganizationReposActivity.loadExtendedReposFromPages(rxRepoApi, this::print, this::printExInfo);
     }
 
-    @Test
-    public void rxAPITestSinglePage(){
-        RxReposService rxService = new RxReposService(new GithubRetorfitClient());
-        RxReposInterface rxRepoApi = rxService.getApi();
-        OrganizationReposActivity.loadReposWithContributors(rxRepoApi, this::print, this::printExInfo);
-    }
 
     private void printExInfo(Exception ex){
         System.out.println("-------------");
