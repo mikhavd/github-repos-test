@@ -1,13 +1,19 @@
 package m13.retrofittest.main.api;
 
+import android.util.Log;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import okhttp3.OkHttpClient;
+import okhttp3.Request;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
+
+import static m13.retrofittest.main.githubUI.GithubApp.CLIENT_ID;
+import static m13.retrofittest.main.githubUI.GithubApp.CLIENT_SECRET;
 
 /**
  * Created by Mikhail Avdeev on 08.02.2019.
@@ -28,14 +34,30 @@ public class GithubRetorfitClient {
 
     static private Retrofit initRetrofit(){
         // Add the interceptor to OkHttpClient
-        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+        HttpLoggingInterceptor httpBodyLogging = new HttpLoggingInterceptor();
+        httpBodyLogging
+                .setLevel(HttpLoggingInterceptor.Level.BODY);
+
+        HttpLoggingInterceptor httpHeaderLogging = new HttpLoggingInterceptor();
+        httpHeaderLogging
+                .setLevel(HttpLoggingInterceptor.Level.HEADERS);
+                //.setLevel(HttpLoggingInterceptor.Level.HEADERS);
 
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
-        httpClient.addInterceptor(logging);
-
-        //httpClient.interceptors().add(requestInterceptor);
-
+        httpClient
+                .addInterceptor(chain -> {
+                    Request request = chain.request().newBuilder()
+                            .addHeader("client_id", CLIENT_ID)
+                            .addHeader("client_secret", CLIENT_SECRET)
+                            .build();
+                    //Log.d("GithubAPI", "-------------------------------");
+                    //Log.d("GithubAPI", "Request headers: " + request.headers());
+                    //Log.d("GithubAPI", "Request body: " + request.body());
+                    //Log.d("GithubAPI", "-------------------------------");
+                    return chain.proceed(request);
+                })
+                .addInterceptor(httpHeaderLogging)
+                .addInterceptor(httpBodyLogging);
         //custom Gson parser instance
         Gson gson = new GsonBuilder()
                 .setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")

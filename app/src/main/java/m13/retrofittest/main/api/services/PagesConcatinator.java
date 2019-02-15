@@ -1,7 +1,6 @@
 package m13.retrofittest.main.api.services;
 
 import io.reactivex.Observable;
-import io.reactivex.functions.Function;
 import m13.retrofittest.main.api.HeaderParser;
 import retrofit2.Response;
 
@@ -25,7 +24,7 @@ public class PagesConcatinator<T> {
         return
             apiRequester.firstRequest()
                     .concatMap(response -> {
-                        String linkToNextPage = HeaderParser.getLinkToNextPage(response); //response.headers().get("next");
+                        String linkToNextPage = HeaderParser.getLinkToNextPage(response);
                         if ((linkToNextPage == null) || linkToNextPage.isEmpty())
                             return Observable.just(response);
                         else
@@ -37,5 +36,21 @@ public class PagesConcatinator<T> {
     public Observable<T> getObservableT(){
         return getObservableResponses()
                 .concatMap(response -> Observable.just(response.body()));
+    }
+
+    /**
+     * Created by Mikhail Avdeev on 14.02.2019.
+     */
+    public interface ApiRequester<T> {
+
+        Observable<Response<T>> firstRequest();
+    }
+
+    /**
+     * Created by Mikhail Avdeev on 14.02.2019.
+     */
+    public interface PageRequester<T> {
+
+        Observable<Response<T>> pageRequest(String url);
     }
 }

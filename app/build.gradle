@@ -10,13 +10,57 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+
     buildTypes {
+        debug {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            Properties properties = new Properties()
+            def propFile = new File('D:/github-repos-test/secret.properties')
+            if (propFile.canRead()) {
+                properties.load(new FileInputStream(propFile))
+                if (properties != null && properties.containsKey('CLIENT_ID')
+                        && properties.containsKey('CLIENT_SECRET')) {
+                    buildConfigField "String", "CLIENT_ID", "\"" + properties['CLIENT_ID']+"\""
+                    buildConfigField "String", "CLIENT_SECRET", "\"" + properties['CLIENT_SECRET']+"\""
+                } else {
+                    println 'secret.properties found but entries are missing'
+                    buildConfigField "String", "CLIENT_ID", "\"" + "\""
+                    buildConfigField "String", "CLIENT_SECRET", "\"" + "\""
+
+                }
+            } else {
+                println 'secret.properties not found'
+                buildConfigField "String", "CLIENT_ID", "\"" + "\""
+                buildConfigField "String", "CLIENT_SECRET", "\"" + "\""
+            }
+        }
+
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            Properties properties = new Properties()
+            def propFile = new File('D:/github-repos-test/secret.properties')
+            if (propFile.canRead()) {
+                properties.load(new FileInputStream(propFile))
+                if (properties != null && properties.containsKey('CLIENT_ID')
+                        && properties.containsKey('CLIENT_SECRET')) {
+                    buildConfigField "String", "CLIENT_ID", "\"" + properties['CLIENT_ID']+"\""
+                    buildConfigField "String", "CLIENT_SECRET", "\"" + properties['CLIENT_SECRET']+"\""
+                } else {
+                    println 'secret.properties found but entries are missing'
+                    buildConfigField "String", "CLIENT_ID", "\"" + "\""
+                    buildConfigField "String", "CLIENT_SECRET", "\"" + "\""
+                }
+            } else {
+                println 'secret.properties not found'
+                buildConfigField "String", "CLIENT_ID", "\"" + "\""
+                buildConfigField "String", "CLIENT_SECRET", "\"" + "\""
+            }
         }
 
-    }
+}
+
     compileOptions {
         sourceCompatibility = '1.8'
         targetCompatibility = '1.8'

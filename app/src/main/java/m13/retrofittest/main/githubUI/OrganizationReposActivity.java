@@ -19,16 +19,16 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import m13.retrofittest.R;
 import m13.retrofittest.main.api.GithubRetorfitClient;
-import m13.retrofittest.main.api.HeaderParser;
 import m13.retrofittest.main.api.generated.contributors.Contributor;
 import m13.retrofittest.main.api.generated.repos.Repo;
 import m13.retrofittest.main.api.repos.RepoWithContributors;
-import m13.retrofittest.main.api.repos.ReposInterface;
 import m13.retrofittest.main.api.services.PagesConcatinator;
 import m13.retrofittest.main.api.services.RxReposInterface;
 import m13.retrofittest.main.api.services.RxReposService;
 import retrofit2.HttpException;
-import retrofit2.Response;
+
+import static m13.retrofittest.main.githubUI.GithubApp.CLIENT_ID;
+import static m13.retrofittest.main.githubUI.GithubApp.CLIENT_SECRET;
 
 /**
  * Created by Mikhail Avdeev on 11.02.2019.
@@ -40,7 +40,6 @@ public class OrganizationReposActivity extends AppCompatActivity
     List<RepoWithContributors> extendedRepos;
     private final static String organizationName = "square";
     private final static Integer maxNumberPerPage = 1000;
-    private ReposInterface repoApi;
     private RxReposInterface rxRepoApi;
     private TextView emptyView;
 
@@ -136,8 +135,8 @@ public class OrganizationReposActivity extends AppCompatActivity
             RxReposInterface rxRepoApi) {
         //объект, который склеит все страницы с репозиториями
         Observable<List<Repo>> repoList = new PagesConcatinator<>(
-                rxRepoApi::getPageWithRepoList,
-                rxRepoApi::responceWithRepoListByLink)
+                () -> rxRepoApi.getRepoList(CLIENT_ID, CLIENT_SECRET),
+                url -> rxRepoApi.getReposListByLink(url+"&client_id="+CLIENT_ID+"&client_secret="+CLIENT_SECRET))
             .getObservableT();
         Log.d("GithubAPI", "repoList:" + repoList.toString());
         return repoList
@@ -146,8 +145,8 @@ public class OrganizationReposActivity extends AppCompatActivity
                         //первая возвращает список контрибуторов проекта...
                         repo -> new PagesConcatinator<>(
                                 //вместо ссылки на метод лямбда, т.к. нужно передать параметр RepoName
-                                () -> rxRepoApi.getPageWithContributorsList(repo.getName()),
-                                rxRepoApi::responceWithContributorsListByLink)
+                                () -> rxRepoApi.getСontributorsList(repo.getName(), CLIENT_ID, CLIENT_SECRET),
+                                url -> rxRepoApi.getContributorsListByLink(url+"&client_id="+CLIENT_ID+"&client_secret="+CLIENT_SECRET))
                                 .getObservableT(),
                         //...вторая использует результат первой:
                         //создаём объект (repo1, contributors) -> new RepoWithContributors(repo1, contributors));

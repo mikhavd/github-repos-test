@@ -302,3 +302,4 @@ src/ru/micard/pharmacy/mainactivitis/MainMicardActivity.java.orig
 src/ru/micard/pharmacy/server/LPUServer.java.orig
 import-summary.txt
 release/release/output.json
+secret.properties

@@ -7,7 +7,6 @@ import java.lang.reflect.Type;
  * Created by Mikhail Avdeev on 09.02.2019.
  */
 public class ApiService<Api> {
-    protected GithubRetorfitClient apiClient;
     protected Api api;
 
 
