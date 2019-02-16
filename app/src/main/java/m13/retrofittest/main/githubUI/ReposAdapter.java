@@ -9,7 +9,8 @@ import android.view.ViewGroup;
 import java.util.List;
 
 import m13.retrofittest.R;
-import m13.retrofittest.main.api.repos.RepoWithContributors;
+import m13.retrofittest.main.api.repos.ExtendedRepo;
+import m13.retrofittest.main.api.repos.IExtendedRepo;
 
 /**
  * Created by Mikhail Avdeev on 11.02.2019.
@@ -18,10 +19,10 @@ class ReposAdapter extends RecyclerView.Adapter<BasicViewHolder> {
 
 
     private final RecyclerViewClickListener itemListener;
-    private List<RepoWithContributors> repos;
+    private List<IExtendedRepo> repos;
 
     ReposAdapter(RecyclerViewClickListener itemListener,
-                 List<RepoWithContributors> repos) {
+                 List<IExtendedRepo> repos) {
         this.itemListener = itemListener;
         this.repos = repos;
     }
@@ -35,13 +36,13 @@ class ReposAdapter extends RecyclerView.Adapter<BasicViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull BasicViewHolder holder, int position) {
-        RepoWithContributors repo = repos.get(position);
+        IExtendedRepo repo = repos.get(position);
         holder.setMainText(repo.getName());
         holder.setBottomRightText("★: " +
                 String.valueOf(repo.getStargazersCount()));
         holder.setBottomLeftText(String.valueOf(position + 1));
         holder.setTopRightText("Contibutors: " +
-                String.valueOf(repo.getContributorsSize()));
+                String.valueOf(repo.getContributorsNumber()));
 
     }
 

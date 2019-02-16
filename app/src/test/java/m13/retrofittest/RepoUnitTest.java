@@ -4,10 +4,9 @@ import org.junit.Test;
 
 import m13.retrofittest.main.api.GithubRetorfitClient;
 import m13.retrofittest.main.api.generated.contributors.Contributor;
-import m13.retrofittest.main.api.repos.RepoWithContributors;
+import m13.retrofittest.main.api.repos.ExtendedRepo;
 import m13.retrofittest.main.api.services.RxReposInterface;
 import m13.retrofittest.main.api.services.RxReposService;
-import m13.retrofittest.main.githubUI.OrganizationReposActivity;
 import retrofit2.HttpException;
 
 /**
@@ -42,7 +41,7 @@ public class RepoUnitTest {
         System.out.println("-------------");
     }
 
-    private void print(RepoWithContributors repo){
+    private void print(ExtendedRepo repo){
         if (repo.getContributors() == null){
             System.out.println("-------------");
             System.out.println("ERROR");

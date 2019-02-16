@@ -24,7 +24,7 @@ public class PagesConcatinator<T> {
         return
             apiRequester.firstRequest()
                     .concatMap(response -> {
-                        String linkToNextPage = HeaderParser.getLinkToNextPage(response);
+                        String linkToNextPage = HeaderParser.getNextPageURL(response);
                         if ((linkToNextPage == null) || linkToNextPage.isEmpty())
                             return Observable.just(response);
                         else

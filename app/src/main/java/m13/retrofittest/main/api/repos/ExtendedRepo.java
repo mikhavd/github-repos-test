@@ -9,11 +9,11 @@ import m13.retrofittest.main.api.generated.repos.Repo;
 /**
  * Created by Mikhail Avdeev on 11.02.2019.
  */
-public class RepoWithContributors {
+public class ExtendedRepo implements IExtendedRepo{
     Repo repo;
     List<Contributor> contributors;
 
-    public RepoWithContributors(Repo repo, List<Contributor> contributors){
+    public ExtendedRepo(Repo repo, List<Contributor> contributors){
         this.repo = repo;
         this.contributors = contributors;
     }
@@ -34,7 +34,7 @@ public class RepoWithContributors {
         return this.repo.getStargazersCount();
     }
 
-    public Integer getContributorsSize() {
+    public Integer getContributorsNumber() {
         return this.contributors.size();
     }
 

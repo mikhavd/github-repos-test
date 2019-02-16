@@ -16,7 +16,7 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             Properties properties = new Properties()
-            def propFile = new File('D:/github-repos-test/secret.properties')
+            def propFile = new File('secret.properties')
             if (propFile.canRead()) {
                 properties.load(new FileInputStream(propFile))
                 if (properties != null && properties.containsKey('CLIENT_ID')

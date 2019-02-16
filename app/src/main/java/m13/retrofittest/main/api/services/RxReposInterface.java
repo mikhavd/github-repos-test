@@ -42,6 +42,13 @@ public interface RxReposInterface {
             @Query("client_secret") String clientSecret
     );
 
+    @GET("repos/square/{repo}/contributors?per_page=1")
+    Observable<Response<List<Contributor>>> getСontributorsSinglePage(
+            @Path("repo") String repo,
+            @Query("client_id") String clientId,
+            @Query("client_secret") String clientSecret
+    );
+
     @GET
     Observable<Response<List<Contributor>>> getContributorsListByLink(
             @Url String url);

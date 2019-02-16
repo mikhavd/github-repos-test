@@ -12,18 +12,22 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 import m13.retrofittest.R;
 import m13.retrofittest.main.api.GithubRetorfitClient;
 import m13.retrofittest.main.api.generated.contributors.Contributor;
 import m13.retrofittest.main.api.generated.repos.Repo;
-import m13.retrofittest.main.api.repos.RepoWithContributors;
+import m13.retrofittest.main.api.repos.ExtendedRepo;
+import m13.retrofittest.main.api.repos.ExtendedRepoLite;
+import m13.retrofittest.main.api.repos.IExtendedRepo;
 import m13.retrofittest.main.api.services.PagesConcatinator;
+import m13.retrofittest.main.api.services.PagesCounter;
 import m13.retrofittest.main.api.services.RxReposInterface;
 import m13.retrofittest.main.api.services.RxReposService;
 import retrofit2.HttpException;
@@ -38,7 +42,7 @@ public class OrganizationReposActivity extends AppCompatActivity
         implements RecyclerViewClickListener {
     RecyclerView recyclerView;
     //List<Repo> repos;
-    List<RepoWithContributors> extendedRepos;
+    List<IExtendedRepo> extendedRepos;
     private final static String organizationName = "square";
     private final static Integer maxNumberPerPage = 1000;
     private RxReposInterface rxRepoApi;
@@ -61,11 +65,12 @@ public class OrganizationReposActivity extends AppCompatActivity
         try {
             RxReposService rxService = new RxReposService(new GithubRetorfitClient());
             this.rxRepoApi = rxService.getApi();
-            loadExtendedReposWithPages(rxRepoApi)
+            loadExtendedReposContributorsCountedOnly(rxRepoApi)
+            //loadExtendedReposWithPages(rxRepoApi)
             .onErrorReturn((Throwable ex) -> {
                 handleException((Exception) ex);
                 //empty object of the datatype
-                return new RepoWithContributors(null, null);
+                return new ExtendedRepoLite(null, null);
             })
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
@@ -99,29 +104,36 @@ public class OrganizationReposActivity extends AppCompatActivity
                 exInfo, Toast.LENGTH_SHORT).show();
     }
 
-    private void saveRepo(RepoWithContributors repoToSave) {
-        //todo
-        if (repoToSave.getContributors() == null) return;
-        for (int i = 0; i < extendedRepos.size(); i++) {
-            RepoWithContributors savedRepo = extendedRepos.get(i);
-            if (savedRepo.getName().equals(repoToSave.getName())) {
-                List<Contributor> newList = new ArrayList<>(savedRepo.getContributors());
-                newList.addAll(repoToSave.getContributors());
-                repoToSave.setContributors(newList);
-                extendedRepos.set(i, repoToSave);
-                recyclerView.getAdapter().notifyDataSetChanged();
-                setRecyclerView();
-                return;
+    private void saveRepo(IExtendedRepo repoToSave) {
+        //совмещаем информацию об контирбуторах от двух разных Repo (из-за того, что они разбиваются на страницы?)
+        if (repoToSave instanceof ExtendedRepo) {
+            if (((ExtendedRepo)repoToSave).getContributors() == null) return;
+            for (int i = 0; i < extendedRepos.size(); i++) {
+                IExtendedRepo savedRepo = extendedRepos.get(i);
+                if (!(savedRepo instanceof ExtendedRepo)) return;;
+                if (savedRepo.getName().equals(repoToSave.getName())) {
+                    List<Contributor> newContributorsList =
+                            new ArrayList<>(((ExtendedRepo)savedRepo).getContributors());
+                    newContributorsList.addAll(((ExtendedRepo)repoToSave).getContributors());
+                    ((ExtendedRepo)repoToSave).setContributors(newContributorsList);
+                    extendedRepos.set(i, repoToSave);
+                    recyclerView.getAdapter().notifyDataSetChanged();
+                    setRecyclerView();
+                    return;
+                }
             }
         }
         extendedRepos.add(repoToSave);
+        //сортируем репозитории по названиям, в алфавитном порядке
+        Collections.sort(extendedRepos,
+                (lhs, rhs) -> lhs.getName().compareTo(rhs.getName()));
         recyclerView.getAdapter().notifyDataSetChanged();
         setRecyclerView();
     }
 
     @Override
     public void recycleViewListClicked(View v, int position) {
-        RepoWithContributors selectedRepo = extendedRepos.get(position);
+        IExtendedRepo selectedRepo = extendedRepos.get(position);
         if (selectedRepo != null) {
             //Toast.makeText(this, selectedRepo.getName(), Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(this, RepoActivity.class);
@@ -132,7 +144,7 @@ public class OrganizationReposActivity extends AppCompatActivity
     }
 
 
-    public static Observable<RepoWithContributors> loadExtendedReposWithPages(
+    public static Observable<ExtendedRepo> loadExtendedReposWithPages(
             RxReposInterface rxRepoApi) {
         //объект, который склеит все страницы с репозиториями
         Observable<List<Repo>> repoList = new PagesConcatinator<>(
@@ -150,8 +162,29 @@ public class OrganizationReposActivity extends AppCompatActivity
                                 url -> rxRepoApi.getContributorsListByLink(url+"&client_id="+CLIENT_ID+"&client_secret="+CLIENT_SECRET))
                                 .getObservableT(),
                         //...вторая использует результат первой:
-                        //создаём объект (repo1, contributors) -> new RepoWithContributors(repo1, contributors));
-                        RepoWithContributors::new);
+                        //создаём объект (repo1, contributors) -> new ExtendedRepo(repo1, contributors));
+                        (repo1, contributors) -> new ExtendedRepo(repo1, contributors));
+    }
+
+    public static Observable<ExtendedRepoLite> loadExtendedReposContributorsCountedOnly(
+            RxReposInterface rxRepoApi) {
+        //объект, который склеит все страницы с репозиториями
+        Observable<List<Repo>> repoList = new PagesConcatinator<>(
+                () -> rxRepoApi.getRepoList(CLIENT_ID, CLIENT_SECRET),
+                url -> rxRepoApi.getReposListByLink(url+"&client_id="+CLIENT_ID+"&client_secret="+CLIENT_SECRET))
+                .getObservableT();
+        Log.d("GithubAPI", "repoList:" + repoList.toString());
+        return repoList
+                .flatMap(Observable::fromIterable)//разбираем Observable<List<Repo>> на перебор Repo
+                .flatMap( //в этом flatMap используется сигнатура с двумя функциями:
+                        //первая возвращает число контрибуторов проекта...
+                        (Function<Repo, Observable<Integer>>) repo -> new PagesCounter<>(
+                                rxRepoApi.getСontributorsSinglePage(
+                                        repo.getName(), CLIENT_ID, CLIENT_SECRET))
+                                .getPagesCount(),
+                        //...вторая использует результат первой:
+                        //создаём объект (repo1, contributorsNumber) -> new ExtendedRepoLite(repo1, contributorsNUmber));
+                        ExtendedRepoLite::new);
     }
 
 }
