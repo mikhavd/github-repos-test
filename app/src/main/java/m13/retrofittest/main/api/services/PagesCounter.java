@@ -1,30 +1,36 @@
 package m13.retrofittest.main.api.services;
 
-import java.util.List;
-import java.util.Observable;
+import java.util.Objects;
 
-import io.reactivex.ObservableSource;
+import io.reactivex.Observable;
 import io.reactivex.functions.Function;
 import m13.retrofittest.main.api.HeaderParser;
-import m13.retrofittest.main.api.generated.contributors.Contributor;
 import retrofit2.Response;
 
-import static m13.retrofittest.main.api.HeaderParser.getLastPageNumber;
+import static io.reactivex.Observable.just;
+import static m13.retrofittest.main.api.HeaderParser.*;
 
 public class PagesCounter<T> {
 
-    private final SinglePageRequester singlePageRequester;
+    private final SinglePageRequester<T> singlePageRequester;
 
-    public PagesCounter(io.reactivex.Observable<Response<T>> singlePageRequester) {
+    public PagesCounter(SinglePageRequester<T> singlePageRequester) {
         this.singlePageRequester = (SinglePageRequester) singlePageRequester;
     }
 
-    public io.reactivex.Observable<Integer> getPagesCount(){
-        return singlePageRequester.singlePageRequest()
-                .flatMap(tResponse -> {
-                    return io.reactivex.Observable.just(getLastPageNumber((Response) tResponse));
-                });
 
+
+    public Observable<Integer> getObservableCount(){
+        return
+                singlePageRequester.singlePageRequest()
+                        .concatMap((Function<Response<T>, Observable<Integer>>) response -> {
+                            try {
+                                return Observable.just(getLastPageNumber(response));
+                            } catch (Exception e) {
+                                //если нет следующей страницы, у нас 1 контрибутор
+                                return Observable.just(1);
+                            }
+                        });
     }
 
     public interface SinglePageRequester<T>{

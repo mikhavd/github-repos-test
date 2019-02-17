@@ -106,7 +106,7 @@ public class OrganizationReposActivity extends AppCompatActivity
 
     private void saveRepo(IExtendedRepo repoToSave) {
         //совмещаем информацию об контирбуторах от двух разных Repo (из-за того, что они разбиваются на страницы?)
-        if (repoToSave instanceof ExtendedRepo) {
+        /*if (repoToSave instanceof ExtendedRepo) {
             if (((ExtendedRepo)repoToSave).getContributors() == null) return;
             for (int i = 0; i < extendedRepos.size(); i++) {
                 IExtendedRepo savedRepo = extendedRepos.get(i);
@@ -122,11 +122,10 @@ public class OrganizationReposActivity extends AppCompatActivity
                     return;
                 }
             }
-        }
+        }*/
         extendedRepos.add(repoToSave);
         //сортируем репозитории по названиям, в алфавитном порядке
-        Collections.sort(extendedRepos,
-                (lhs, rhs) -> lhs.getName().compareTo(rhs.getName()));
+        //Collections.sort(extendedRepos, (lhs, rhs) -> lhs.getName().compareTo(rhs.getName()));
         recyclerView.getAdapter().notifyDataSetChanged();
         setRecyclerView();
     }
@@ -151,7 +150,7 @@ public class OrganizationReposActivity extends AppCompatActivity
                 () -> rxRepoApi.getRepoList(CLIENT_ID, CLIENT_SECRET),
                 url -> rxRepoApi.getReposListByLink(url+"&client_id="+CLIENT_ID+"&client_secret="+CLIENT_SECRET))
             .getObservableT();
-        Log.d("GithubAPI", "repoList:" + repoList.toString());
+        Log.wtf("GithubAPI", "repoList:" + repoList.toString());
         return repoList
                 .flatMap(Observable::fromIterable)//разбираем Observable<List<Repo>> на перебор Repo
                 .flatMap( //в этом flatMap используется сигнатура с двумя функциями:
@@ -163,7 +162,7 @@ public class OrganizationReposActivity extends AppCompatActivity
                                 .getObservableT(),
                         //...вторая использует результат первой:
                         //создаём объект (repo1, contributors) -> new ExtendedRepo(repo1, contributors));
-                        (repo1, contributors) -> new ExtendedRepo(repo1, contributors));
+                        (repo, contributors) -> new ExtendedRepo(repo, contributors));
     }
 
     public static Observable<ExtendedRepoLite> loadExtendedReposContributorsCountedOnly(
@@ -173,18 +172,24 @@ public class OrganizationReposActivity extends AppCompatActivity
                 () -> rxRepoApi.getRepoList(CLIENT_ID, CLIENT_SECRET),
                 url -> rxRepoApi.getReposListByLink(url+"&client_id="+CLIENT_ID+"&client_secret="+CLIENT_SECRET))
                 .getObservableT();
-        Log.d("GithubAPI", "repoList:" + repoList.toString());
+        Log.wtf("GithubAPI", "repoList:" + repoList.toString());
         return repoList
                 .flatMap(Observable::fromIterable)//разбираем Observable<List<Repo>> на перебор Repo
                 .flatMap( //в этом flatMap используется сигнатура с двумя функциями:
                         //первая возвращает число контрибуторов проекта...
-                        (Function<Repo, Observable<Integer>>) repo -> new PagesCounter<>(
-                                rxRepoApi.getСontributorsSinglePage(
-                                        repo.getName(), CLIENT_ID, CLIENT_SECRET))
-                                .getPagesCount(),
+                        (Function<Repo, Observable<Integer>>) repo -> {
+                            try{
+                                return new PagesCounter<>(
+                                        () -> rxRepoApi.getСontributorsSinglePage(
+                                                repo.getName(), CLIENT_ID, CLIENT_SECRET))
+                                        .getObservableCount();
+                            }catch (Exception e){
+                                return Observable.just(0);
+                            }
+                        },
                         //...вторая использует результат первой:
                         //создаём объект (repo1, contributorsNumber) -> new ExtendedRepoLite(repo1, contributorsNUmber));
-                        ExtendedRepoLite::new);
+                        (repo, contributorsNumber) -> new ExtendedRepoLite(repo, contributorsNumber));
     }
 
 }

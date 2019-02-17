@@ -1,5 +1,7 @@
 package m13.retrofittest.main.api;
 
+import android.util.Log;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -63,7 +65,9 @@ public class HeaderParser {
     }
 
     private static String getLinkElementByRel(String linkHeader, String requiredRel){
-        String next = "";
+        Log.wtf("GithubAPI", "getLInkElementByRel: linkHeader: " + linkHeader);
+        Log.wtf("GithubAPI", "getLInkElementByRel: requiredRel: " + requiredRel);
+        String linkElement = "";
         if (linkHeader != null) {
             String[] links = linkHeader.split(SEPARATOR);
             links: for (String link : links) {
@@ -84,29 +88,29 @@ public class HeaderParser {
                     if (relValue.startsWith("\"") && relValue.endsWith("\"")) //$NON-NLS-1$ //$NON-NLS-2$
                         relValue = relValue.substring(1, relValue.length() - 1);
                     if (relValue.equals(requiredRel)) {
-                        next = linkPart;
+                        linkElement = linkPart;
                         break links;
                     }
                     //if (META_FIRST.equals(relValue)) first = linkPart;
                     //else if (META_LAST.equals(relValue)) last = linkPart;
-                    //else if (META_NEXT.equals(relValue)) next = linkPart;
+                    //else if (META_NEXT.equals(relValue)) linkElement = linkPart;
                     //else if (META_PREV.equals(relValue)) prev = linkPart;
                 }
             }
         }
         //} else {
-        //next = response.getHeader(HEADER_NEXT);
+        //linkElement = response.getHeader(HEADER_NEXT);
         //last = response.getHeader(HEADER_LAST);
         //}
-        return next;
+        Log.wtf("GithubAPI", "getLInkElementByRel: linkElement: " + linkElement);
+        return linkElement;
     }
 
     public static Integer getLastPageNumber(Response response) {
         Headers headers = response.headers();
         String linkHeader = headers.get("link");
         String lastPageLink = getLinkElementByRel(linkHeader, "last");
-        Integer lastPageNumber = getIntegerEndOfString(lastPageLink);
-        return null;
+        return getIntegerEndOfString(lastPageLink);
     }
 
     private static Integer getIntegerEndOfString(String s) {
