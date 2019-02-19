@@ -3,6 +3,7 @@ package m13.retrofittest.main.githubUI.activities;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -40,13 +41,19 @@ public class ContributorsListActivity extends AppCompatActivity implements Recyc
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
+
         GithubApp app = (GithubApp) getApplicationContext();
         this.selectedRepo = app.getSelectedRepo();
+        setTitle("Contributors of " + selectedRepo.getName());
         setContentView(R.layout.activity_main);
         recyclerView = findViewById(R.id.posts_recycle_view);
         emptyView = findViewById(R.id.empty_view);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),
+                layoutManager.getOrientation());
+        recyclerView.addItemDecoration(dividerItemDecoration);
+
         try {
             ContributorsAdapter adapter = new ContributorsAdapter(this,
                     contributorsFullList);

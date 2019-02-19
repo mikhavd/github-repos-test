@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -62,6 +63,9 @@ public class OrganizationReposActivity extends AppCompatActivity
         ReposAdapter adapter = new ReposAdapter(this, extendedRepos);
         recyclerView.setAdapter(adapter);
         setRecyclerView();
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),
+                layoutManager.getOrientation());
+        recyclerView.addItemDecoration(dividerItemDecoration);
         try {
             APIInterface rxRepoApi = app.getRxRepoApi();
             loadExtendedRepos(rxRepoApi)
