@@ -11,7 +11,7 @@ public class PagesCounter<T> {
     private final SinglePageRequester<T> singlePageRequester;
 
     public PagesCounter(SinglePageRequester<T> singlePageRequester) {
-        this.singlePageRequester = (SinglePageRequester) singlePageRequester;
+        this.singlePageRequester = singlePageRequester;
     }
 
 

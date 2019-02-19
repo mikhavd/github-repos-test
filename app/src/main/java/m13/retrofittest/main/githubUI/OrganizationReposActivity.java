@@ -167,18 +167,8 @@ public class OrganizationReposActivity extends AppCompatActivity
             RxReposInterface rxRepoApi) {
         //объект, который склеит все страницы с репозиториями
         Observable<List<Repo>> repoList = new PagesConcatinator<>(
-                new PagesConcatinator.ApiRequester<List<Repo>>() {
-                    @Override
-                    public Observable<Response<List<Repo>>> request() {
-                        return rxRepoApi.getRepoList(CLIENT_ID, CLIENT_SECRET);
-                    }
-                },
-                new PagesConcatinator.PageRequester<List<Repo>>() {
-                    @Override
-                    public Observable<Response<List<Repo>>> request(String url) {
-                        return rxRepoApi.getReposListByLink(url + "&client_id=" + CLIENT_ID + "&client_secret=" + CLIENT_SECRET);
-                    }
-                })
+                () -> rxRepoApi.getRepoList(CLIENT_ID, CLIENT_SECRET),
+                url -> rxRepoApi.getReposListByLink(url + "&client_id=" + CLIENT_ID + "&client_secret=" + CLIENT_SECRET))
                 .getObservableT();
         Log.wtf("GithubAPI", "repoList:" + repoList.toString());
         return repoList
@@ -197,7 +187,7 @@ public class OrganizationReposActivity extends AppCompatActivity
                         },
                         //...вторая использует результат первой:
                         //создаём объект (repo1, contributorsNumber) -> new ExtendedRepoLite(repo1, contributorsNUmber));
-                        (repo, contributorsNumber) -> new ExtendedRepoLite(repo, contributorsNumber));
+                        ExtendedRepoLite::new);
     }
 
 }

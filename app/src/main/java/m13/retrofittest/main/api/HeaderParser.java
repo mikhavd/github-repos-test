@@ -120,7 +120,7 @@ public class HeaderParser {
             String someNumberStr = matcher.group(1);
             return Integer.parseInt(someNumberStr);
         }
-        return 0;
+        return 1;
     }
 
 
