@@ -3,6 +3,7 @@ package m13.retrofittest.main.api.services;
 import java.util.List;
 
 import io.reactivex.Observable;
+import m13.retrofittest.main.api.generated.commits.CommitData;
 import m13.retrofittest.main.api.generated.contributors.Contributor;
 import m13.retrofittest.main.api.generated.repos.Repo;
 import retrofit2.Response;
@@ -53,4 +54,14 @@ public interface APIInterface {
     Observable<Response<List<Contributor>>> getContributorsListByLink(
             @Url String url);
 
+    @GET("repos/square/{repo}/commits?per_page=1000")
+    Observable<Response<List<CommitData>>> getCommitDataList(
+            @Path("repo") String repo,
+            @Query("client_id") String clientId,
+            @Query("client_secret") String clientSecret
+    );
+
+    @GET
+    Observable<Response<List<CommitData>>> getCommitDataListByLink(
+            @Url String s);
 }

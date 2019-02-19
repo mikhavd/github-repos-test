@@ -1,8 +1,6 @@
 package m13.retrofittest.main.api.services;
 
 import io.reactivex.Observable;
-import io.reactivex.ObservableSource;
-import io.reactivex.functions.Function;
 import m13.retrofittest.main.api.HeaderParser;
 import retrofit2.Response;
 
@@ -18,47 +16,6 @@ public class PagesConcatinator<T> {
     public PagesConcatinator(ApiRequester<T> apiRequester, PageRequester<T> pageRequester){
         this.apiRequester = apiRequester;
         this.pageRequester = pageRequester;
-
-    }
-
-
-    private Observable<Response<T>> getObservableResponses(){
-        return
-            apiRequester.request()
-                    .concatMap( response -> {
-                        String linkToNextPage = HeaderParser.getNextPageURL(response);
-                        if ((linkToNextPage == null) || linkToNextPage.isEmpty())
-                            return Observable.just(response);
-                        else
-                            return Observable.just(response)
-                                    .concatWith(pageRequester.request(linkToNextPage));
-                    });
-    }
-
-    private Observable<Response<T>> getPages(PageRequester<T> pageRequester, String pageURL){
-        return pageRequester.request(pageURL)
-                .concatMap(response -> {
-                    String linkToNextPage = HeaderParser.getNextPageURL(response);
-                    if ((linkToNextPage == null) || linkToNextPage.isEmpty())
-                        return Observable.just(response);
-                    else
-                        return Observable.just(response)
-                                .concatWith(getPages(pageRequester, linkToNextPage));
-                });
-    }
-
-    private Observable<Response<T>> getObservableResponsesPages(){
-        return
-            apiRequester.request()
-                    .concatMap(response -> {
-                        String linkToNextPage = HeaderParser.getNextPageURL(response);
-                        if ((linkToNextPage == null) || linkToNextPage.isEmpty())
-                            return Observable.just(response);
-                        else
-                            return Observable.just(response)
-                                    .concatWith(getPages(pageRequester, linkToNextPage));
-                    }
-                    );
     }
 
     Observable<Response<T>> getPageAndNext(String nextPageUrl) {

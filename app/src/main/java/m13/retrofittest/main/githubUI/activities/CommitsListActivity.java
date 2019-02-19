@@ -15,11 +15,12 @@ import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import m13.retrofittest.R;
-import m13.retrofittest.main.api.generated.contributors.Contributor;
+import m13.retrofittest.main.api.generated.commits.Commit;
+import m13.retrofittest.main.api.generated.commits.CommitData;
 import m13.retrofittest.main.api.repos.IExtendedRepo;
-import m13.retrofittest.main.api.services.PagesConcatinator;
 import m13.retrofittest.main.api.services.APIInterface;
-import m13.retrofittest.main.githubUI.ContributorsAdapter;
+import m13.retrofittest.main.api.services.PagesConcatinator;
+import m13.retrofittest.main.githubUI.CommitsAdapter;
 import m13.retrofittest.main.githubUI.GithubApp;
 import m13.retrofittest.main.githubUI.RecyclerViewClickListener;
 
@@ -27,9 +28,9 @@ import static m13.retrofittest.main.githubUI.GithubApp.CLIENT_ID;
 import static m13.retrofittest.main.githubUI.GithubApp.CLIENT_SECRET;
 
 /**
- * Created by Mikhail Avdeev on 13.02.2019.
+ * Created by Mikhail Avdeev on 19.02.2019.
  */
-public class ContributorsListActivity extends AppCompatActivity implements RecyclerViewClickListener {
+public class CommitsListActivity extends AppCompatActivity implements RecyclerViewClickListener {
     RecyclerView recyclerView;
     IExtendedRepo selectedRepo;
     //List<Contributor> contributorList;
@@ -48,7 +49,7 @@ public class ContributorsListActivity extends AppCompatActivity implements Recyc
         recyclerView.setLayoutManager(layoutManager);
         try {
             APIInterface rxRepoApi = app.getRxRepoApi();
-            loadRepoContributorsList(rxRepoApi)
+            loadRepoCommitsList(rxRepoApi)
                     //loadExtendedReposWithPages(rxRepoApi)
                     .onErrorReturn((Throwable ex) -> {
                         handleException(ex);
@@ -57,31 +58,34 @@ public class ContributorsListActivity extends AppCompatActivity implements Recyc
                     })
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribeOn(Schedulers.io())
-                    .subscribe(this::saveContributors, this::handleException);
+                    .subscribe(this::saveCommits, this::handleException);
         } catch (Exception e) {
             handleException(e);
         }
 
     }
 
-    private void saveContributors(List<Contributor> contributors) {
-        ContributorsAdapter adapter = new ContributorsAdapter(this, contributors);
-        recyclerView.setAdapter(adapter);
-        setRecyclerView(contributors);
+    private void saveCommits(List<CommitData> commitDataList) {
+        ArrayList<Commit> commits = new ArrayList<>();
+            for (CommitData commitData : commitDataList)
+                commits.add(commitData.getCommit());
+            CommitsAdapter adapter = new CommitsAdapter(this, commits);
+            recyclerView.setAdapter(adapter);
+            setRecyclerView(commits);
     }
 
     private void handleException(Throwable throwable) {
         //todo
     }
 
-    private Observable<List<Contributor>> loadRepoContributorsList(APIInterface rxApi) {
+    private Observable<List<CommitData>> loadRepoCommitsList(APIInterface rxApi) {
         return new PagesConcatinator<>(
-                () -> rxApi.getContributorsList(selectedRepo.getName(), CLIENT_ID, CLIENT_SECRET),
-                url -> rxApi.getContributorsListByLink(url + "&client_id=" + CLIENT_ID + "&client_secret=" + CLIENT_SECRET))
+                () -> rxApi.getCommitDataList(selectedRepo.getName(), CLIENT_ID, CLIENT_SECRET),
+                url -> rxApi.getCommitDataListByLink(url + "&client_id=" + CLIENT_ID + "&client_secret=" + CLIENT_SECRET))
                 .getObservableT();
     }
 
-    private void setRecyclerView(List<Contributor> contributors) {
+    private void setRecyclerView(List<Commit> contributors) {
         if (contributors.isEmpty()){
             recyclerView.setVisibility(View.GONE);
             emptyView.setVisibility(View.VISIBLE);
@@ -96,3 +100,4 @@ public class ContributorsListActivity extends AppCompatActivity implements Recyc
 
     }
 }
+

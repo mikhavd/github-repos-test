@@ -39,6 +39,9 @@ https://api.github.com/orgs/square/repos
         //stats/contributors
         GET /repos/:owner/:repo/stats/contributors
          https://api.github.com/orgs/square/repos?per_page=1000
+         
+         https://api.github.com/repos/square/html5/commits?per_page=1
+         
         https://api.github.com/repos/square/wire/contributors/per_page=1000
             пример с другого приложения: https://api.github.com/repos/tensorflow/tensorflow/contributors?per_page=1
         4. что-то своё на усмотрение (подсмотреть с web-представления листа репозиториев?) //

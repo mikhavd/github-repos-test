@@ -134,7 +134,7 @@ public class OrganizationReposActivity extends AppCompatActivity
         IExtendedRepo selectedRepo = extendedRepos.get(position);
         if (selectedRepo != null) {
             //Toast.makeText(this, selectedRepo.getName(), Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(this, ContributorsListActivity.class);
+            Intent intent = new Intent(this, CommitsListActivity.class); //ContributorsListActivity.class);
 
             app.setSelectedRepo(selectedRepo);
             this.startActivity(intent);
