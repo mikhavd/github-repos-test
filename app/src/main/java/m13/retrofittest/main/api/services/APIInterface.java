@@ -14,7 +14,7 @@ import retrofit2.http.Url;
 /**
  * Created by Mikhail Avdeev on 11.02.2019.
  */
-public interface RxReposInterface {
+public interface APIInterface {
 
         /*@GET("orgs/{org}/repos")
         Observable<List<Repo>> organizationRepoList(
@@ -36,7 +36,7 @@ public interface RxReposInterface {
 
 
     @GET("repos/square/{repo}/contributors?per_page=1000")
-    Observable<Response<List<Contributor>>> getСontributorsList(
+    Observable<Response<List<Contributor>>> getContributorsList(
             @Path("repo") String repo,
             @Query("client_id") String clientId,
             @Query("client_secret") String clientSecret

@@ -15,14 +15,14 @@ import m13.retrofittest.main.api.repos.IExtendedRepo;
 /**
  * Created by Mikhail Avdeev on 11.02.2019.
  */
-class ReposAdapter extends RecyclerView.Adapter<BasicViewHolder> {
+public class ReposAdapter extends RecyclerView.Adapter<BasicViewHolder> {
 
 
     private final RecyclerViewClickListener itemListener;
     private List<IExtendedRepo> repos;
 
-    ReposAdapter(RecyclerViewClickListener itemListener,
-                 List<IExtendedRepo> repos) {
+    public ReposAdapter(RecyclerViewClickListener itemListener,
+                        List<IExtendedRepo> repos) {
         this.itemListener = itemListener;
         this.repos = repos;
     }

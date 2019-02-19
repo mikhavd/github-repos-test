@@ -14,15 +14,15 @@ import m13.retrofittest.main.api.generated.contributors.Contributor;
 /**
  * Created by Mikhail Avdeev on 13.02.2019.
  */
-class ContributorsAdapter extends RecyclerView.Adapter<BasicViewHolder> {
+public class ContributorsAdapter extends RecyclerView.Adapter<BasicViewHolder> {
 
 
     private final RecyclerViewClickListener itemListener;
     private List<Contributor> contributorList;
 
 
-    ContributorsAdapter(RecyclerViewClickListener itemListener,
-                        List<Contributor> contributorList) {
+    public ContributorsAdapter(RecyclerViewClickListener itemListener,
+                               List<Contributor> contributorList) {
         this.itemListener = itemListener;
         this.contributorList = contributorList;
     }

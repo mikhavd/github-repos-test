@@ -1,4 +1,4 @@
-package m13.retrofittest.main.githubUI;
+package m13.retrofittest.main.githubUI.activities;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -19,16 +19,16 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 import m13.retrofittest.R;
-import m13.retrofittest.main.api.GithubRetorfitClient;
 import m13.retrofittest.main.api.generated.repos.Repo;
 import m13.retrofittest.main.api.repos.ExtendedRepoLite;
 import m13.retrofittest.main.api.repos.IExtendedRepo;
 import m13.retrofittest.main.api.services.PagesConcatinator;
 import m13.retrofittest.main.api.services.PagesCounter;
-import m13.retrofittest.main.api.services.RxReposInterface;
-import m13.retrofittest.main.api.services.RxReposService;
+import m13.retrofittest.main.api.services.APIInterface;
+import m13.retrofittest.main.githubUI.GithubApp;
+import m13.retrofittest.main.githubUI.RecyclerViewClickListener;
+import m13.retrofittest.main.githubUI.ReposAdapter;
 import retrofit2.HttpException;
-import retrofit2.Response;
 
 import static m13.retrofittest.main.githubUI.GithubApp.CLIENT_ID;
 import static m13.retrofittest.main.githubUI.GithubApp.CLIENT_SECRET;
@@ -43,13 +43,15 @@ public class OrganizationReposActivity extends AppCompatActivity
     List<IExtendedRepo> extendedRepos;
     private final static String organizationName = "square";
     private final static Integer maxNumberPerPage = 1000;
-    private RxReposInterface rxRepoApi;
+
     private TextView emptyView;
+    private GithubApp app;
 
     @SuppressLint("CheckResult")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        app = (GithubApp) getApplicationContext();
         setContentView(R.layout.activity_main);
         //create and populate adapter
         extendedRepos = new ArrayList<>();
@@ -61,8 +63,7 @@ public class OrganizationReposActivity extends AppCompatActivity
         recyclerView.setAdapter(adapter);
         setRecyclerView();
         try {
-            RxReposService rxService = new RxReposService(new GithubRetorfitClient());
-            this.rxRepoApi = rxService.getApi();
+            APIInterface rxRepoApi = app.getRxRepoApi();
             loadExtendedReposContributorsCount(rxRepoApi)
             //loadExtendedReposWithPages(rxRepoApi)
             .onErrorReturn((Throwable ex) -> {
@@ -133,38 +134,15 @@ public class OrganizationReposActivity extends AppCompatActivity
         IExtendedRepo selectedRepo = extendedRepos.get(position);
         if (selectedRepo != null) {
             //Toast.makeText(this, selectedRepo.getName(), Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(this, RepoActivity.class);
-            GithubApp app = (GithubApp) getApplicationContext();
+            Intent intent = new Intent(this, ContributorsListActivity.class);
+
             app.setSelectedRepo(selectedRepo);
             this.startActivity(intent);
         }
     }
 
-
-    /*public static Observable<ExtendedRepo> loadExtendedReposWithPages(
-            RxReposInterface rxRepoApi) {
-        //объект, который склеит все страницы с репозиториями
-        Observable<List<Repo>> repoList = new PagesConcatinator<>(
-                () -> rxRepoApi.getRepoList(CLIENT_ID, CLIENT_SECRET),
-                url -> rxRepoApi.getReposListByLink(url+"&client_id="+CLIENT_ID+"&client_secret="+CLIENT_SECRET))
-            .getObservableT();
-        Log.wtf("GithubAPI", "repoList:" + repoList.toString());
-        return repoList
-                .flatMap(Observable::fromIterable)//разбираем Observable<List<Repo>> на перебор Repo
-                .flatMap( //в этом flatMap используется сигнатура с двумя функциями:
-                        //первая возвращает список контрибуторов проекта...
-                        repo -> new PagesConcatinator<>(
-                                //вместо ссылки на метод лямбда, т.к. нужно передать параметр RepoName
-                                () -> rxRepoApi.getСontributorsList(repo.getName(), CLIENT_ID, CLIENT_SECRET),
-                                url -> rxRepoApi.getContributorsListByLink(url+"&client_id="+CLIENT_ID+"&client_secret="+CLIENT_SECRET))
-                                .getObservableT(),
-                        //...вторая использует результат первой:
-                        //создаём объект (repo1, contributors) -> new ExtendedRepo(repo1, contributors));
-                        (repo, contributors) -> new ExtendedRepo(repo, contributors));
-    }*/
-
     public static Observable<ExtendedRepoLite> loadExtendedReposContributorsCount(
-            RxReposInterface rxRepoApi) {
+            APIInterface rxRepoApi) {
         //объект, который склеит все страницы с репозиториями
         Observable<List<Repo>> repoList = new PagesConcatinator<>(
                 () -> rxRepoApi.getRepoList(CLIENT_ID, CLIENT_SECRET),
