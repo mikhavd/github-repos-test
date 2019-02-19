@@ -59,10 +59,12 @@ public class OrganizationReposActivity extends AppCompatActivity
         recyclerView = findViewById(R.id.posts_recycle_view);
         emptyView = findViewById(R.id.empty_view);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+
         recyclerView.setLayoutManager(layoutManager);
         ReposAdapter adapter = new ReposAdapter(this, extendedRepos);
         recyclerView.setAdapter(adapter);
         setRecyclerView();
+
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),
                 layoutManager.getOrientation());
         recyclerView.addItemDecoration(dividerItemDecoration);
@@ -108,42 +110,11 @@ public class OrganizationReposActivity extends AppCompatActivity
     }
 
     private void saveRepo(IExtendedRepo repoToSave) {
-        //совмещаем информацию об контирбуторах от двух разных Repo (из-за того, что они разбиваются на страницы?)
-        /*if (repoToSave instanceof ExtendedRepo) {
-            if (((ExtendedRepo)repoToSave).getContributors() == null) return;
-            for (int i = 0; i < extendedRepos.size(); i++) {
-                IExtendedRepo savedRepo = extendedRepos.get(i);
-                if (!(savedRepo instanceof ExtendedRepo)) return;;
-                if (savedRepo.getName().equals(repoToSave.getName())) {
-                    List<Contributor> newContributorsList =
-                            new ArrayList<>(((ExtendedRepo)savedRepo).getContributors());
-                    newContributorsList.addAll(((ExtendedRepo)repoToSave).getContributors());
-                    ((ExtendedRepo)repoToSave).setContributors(newContributorsList);
-                    extendedRepos.set(i, repoToSave);
-                    recyclerView.getAdapter().notifyDataSetChanged();
-                    setRecyclerView();
-                    return;
-                }
-            }
-        }*/
         extendedRepos.add(repoToSave);
-        //сортируем репозитории по названиям, в алфавитном порядке
-        //Collections.sort(extendedRepos, (lhs, rhs) -> lhs.getName().compareTo(rhs.getName()));
         recyclerView.getAdapter().notifyDataSetChanged();
         setRecyclerView();
     }
 
-    @Override
-    public void recycleViewListClicked(View v, int position) {
-        IExtendedRepo selectedRepo = extendedRepos.get(position);
-        if (selectedRepo != null) {
-            //Toast.makeText(this, selectedRepo.getName(), Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(this, CommitsListActivity.class); //ContributorsListActivity.class);
-
-            app.setSelectedRepo(selectedRepo);
-            this.startActivity(intent);
-        }
-    }
 
     public static Observable<ExtendedRepoLite> loadExtendedRepos(
             APIInterface rxRepoApi) {
@@ -170,6 +141,19 @@ public class OrganizationReposActivity extends AppCompatActivity
                         //...вторая использует результат первой:
                         //создаём объект (repo1, contributorsNumber) -> new ExtendedRepoLite(repo1, contributorsNUmber));
                         ExtendedRepoLite::new);
+    }
+
+
+    @Override
+    public void recycleViewListClicked(View v, int position) {
+        IExtendedRepo selectedRepo = extendedRepos.get(position);
+        if (selectedRepo != null) {
+            //Toast.makeText(this, selectedRepo.getName(), Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(this, RepoActivity.class); //ContributorsListActivity.class);
+
+            app.setSelectedRepo(selectedRepo);
+            this.startActivity(intent);
+        }
     }
 
 }

@@ -23,6 +23,7 @@
         </activity>
         <activity android:name=".main.githubUI.activities.ContributorsListActivity" />
         <activity android:name=".main.githubUI.activities.CommitsListActivity" />
+        <activity android:name=".main.githubUI.activities.RepoActivity" />
     </application>
 
 </manifest>

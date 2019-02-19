@@ -9,13 +9,17 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="main text"
+        android:layout_toStartOf="@+id/top_right_item"
+        android:textSize="16sp"
+        android:textStyle="bold"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:layout_marginStart="0dp"
         android:layout_marginLeft="0dp"
 
-        android:textColor="?android:attr/textColorPrimary" />
+        android:textColor="?android:attr/textColorPrimary"
+        android:layout_toLeftOf="@+id/top_right_item" />
 
 
     <TextView

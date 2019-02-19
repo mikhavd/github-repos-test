@@ -1,7 +1,5 @@
 package m13.retrofittest.main.api.repos;
 
-import java.util.Arrays;
-
 public interface IExtendedRepo {
 
     Integer getContributorsNumber();
@@ -9,4 +7,6 @@ public interface IExtendedRepo {
     String getName();
 
     int getStargazersCount();
+
+    String getRepoInfo();
 }

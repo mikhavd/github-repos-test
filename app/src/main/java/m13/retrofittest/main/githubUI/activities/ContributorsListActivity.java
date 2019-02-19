@@ -49,17 +49,20 @@ public class ContributorsListActivity extends AppCompatActivity implements Recyc
         recyclerView = findViewById(R.id.posts_recycle_view);
         emptyView = findViewById(R.id.empty_view);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+
         recyclerView.setLayoutManager(layoutManager);
+        ContributorsAdapter adapter = new ContributorsAdapter(this,
+                contributorsFullList);
+        recyclerView.setAdapter(adapter);
+        setRecyclerView();
+
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),
                 layoutManager.getOrientation());
         recyclerView.addItemDecoration(dividerItemDecoration);
 
         try {
-            ContributorsAdapter adapter = new ContributorsAdapter(this,
-                    contributorsFullList);
-            recyclerView.setAdapter(adapter);
-            setRecyclerView();
             APIInterface rxRepoApi = app.getRxRepoApi();
+
             loadRepoContributorsList(rxRepoApi)
                     //loadExtendedReposWithPages(rxRepoApi)
                     .onErrorReturn((Throwable ex) -> {
@@ -79,6 +82,7 @@ public class ContributorsListActivity extends AppCompatActivity implements Recyc
     private void saveContributors(List<Contributor> contributors) {
         contributorsFullList.addAll(contributors);
         recyclerView.getAdapter().notifyDataSetChanged();
+        setRecyclerView();
     }
 
     private void handleException(Throwable throwable) {

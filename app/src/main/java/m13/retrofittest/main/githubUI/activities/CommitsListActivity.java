@@ -35,7 +35,6 @@ import static m13.retrofittest.main.githubUI.GithubApp.CLIENT_SECRET;
 public class CommitsListActivity extends AppCompatActivity implements RecyclerViewClickListener {
     RecyclerView recyclerView;
     IExtendedRepo selectedRepo;
-    //List<Contributor> contributorList;
     private TextView emptyView;
     ArrayList<Commit> commitsFullList = new ArrayList<>();
 
@@ -43,6 +42,7 @@ public class CommitsListActivity extends AppCompatActivity implements RecyclerVi
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
+
         GithubApp app = (GithubApp) getApplicationContext();
         this.selectedRepo = app.getSelectedRepo();
         setTitle("Commits of " + selectedRepo.getName());
@@ -106,8 +106,8 @@ public class CommitsListActivity extends AppCompatActivity implements RecyclerVi
                 .getObservableT();
     }
 
-    private void setRecyclerView(List<Commit> contributors) {
-        if (contributors.isEmpty()){
+    private void setRecyclerView(List<Commit> commitList) {
+        if (commitList.isEmpty()){
             recyclerView.setVisibility(View.GONE);
             emptyView.setVisibility(View.VISIBLE);
         } else{
