@@ -34,7 +34,7 @@ public class CommitsAdapter extends RecyclerView.Adapter<BasicViewHolder> {
     @NonNull
     @Override
     public BasicViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.repo_item, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item, parent, false);
         return new BasicViewHolder(v, this.itemListener);
     }
 
@@ -42,9 +42,8 @@ public class CommitsAdapter extends RecyclerView.Adapter<BasicViewHolder> {
     public void onBindViewHolder(@NonNull BasicViewHolder holder, int position) {
         Commit commit = commits.get(position);
         holder.setMainText(commit.getMessage());//.getLogin());
-        holder.setBottomLeftText(String.valueOf(position + 1));
-        holder.setTopRightText("Committer: " +
-                commit.getCommitter().getName());//contributor.getContributions()));
+        holder.setBottomLeftText(commit.getAuthor().getDate()); //String.valueOf(position + 1));
+        holder.setTopRightText(commit.getCommitter().getName());//contributor.getContributions()));
         holder.setBottomRightText("");
     }
 

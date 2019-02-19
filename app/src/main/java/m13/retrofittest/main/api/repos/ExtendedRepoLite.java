@@ -35,6 +35,8 @@ public class ExtendedRepoLite implements IExtendedRepo{
     public String getRepoInfo() {
         return
                 toLineIfNotEmpty("Repo: ", repo.getFullName()) +
+                toLineIfNotEmpty("Contributors: ", String.valueOf(contributorsNumber)) +
+                toLineIfNotEmpty("Stargazers: ", String.valueOf(repo.getStargazersCount())) +
                 toLineIfNotEmpty("Description: ", repo.getDescription()) +
                 toLineIfNotEmpty("Owner: ", repo.getOwner().getLogin()) +
                 toLineIfNotEmpty("Created: : ", repo.getCreatedAt()) +

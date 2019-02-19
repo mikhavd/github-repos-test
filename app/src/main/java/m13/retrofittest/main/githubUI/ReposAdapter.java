@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import java.util.List;
 
 import m13.retrofittest.R;
-import m13.retrofittest.main.api.repos.ExtendedRepo;
 import m13.retrofittest.main.api.repos.IExtendedRepo;
 
 /**
@@ -30,7 +29,7 @@ public class ReposAdapter extends RecyclerView.Adapter<BasicViewHolder> {
     @NonNull
     @Override
     public BasicViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.repo_item, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item, parent, false);
         return new BasicViewHolder(v, this.itemListener);
     }
 
