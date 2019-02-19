@@ -47,23 +47,6 @@ public class GithubRetorfitClient {
                 .setLevel(HttpLoggingInterceptor.Level.HEADERS);
                 //.setLevel(HttpLoggingInterceptor.Level.HEADERS);
 
-        class LoggingInterceptor implements Interceptor {
-            @Override public Response intercept(Chain chain) throws IOException {
-                Request request = chain.request();
-
-                long t1 = System.nanoTime();
-                Log.d("OkHttp", String.format("Sending request %s on %s%n%s",
-                        request.url(), chain.connection(), request.headers()));
-
-                Response response = chain.proceed(request);
-
-                long t2 = System.nanoTime();
-                Log.d("OkHttp", String.format("Received response for %s in %.1fms%n%s",
-                        response.request().url(), (t2 - t1) / 1e6d, response.headers()));
-
-                return response;
-            }
-        }
 
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
         httpClient
@@ -72,15 +55,10 @@ public class GithubRetorfitClient {
                             .addHeader("client_id", CLIENT_ID)
                             .addHeader("client_secret", CLIENT_SECRET)
                             .build();
-                    //Log.d("GithubAPI", "-------------------------------");
-                    //Log.d("GithubAPI", "Request headers: " + request.headers());
-                    //Log.d("GithubAPI", "Request body: " + request.body());
-                    //Log.d("GithubAPI", "-------------------------------");
                     return chain.proceed(request);
                 })
                 .addInterceptor(httpHeaderLogging)
-                .addInterceptor(httpBodyLogging)
-        .addInterceptor(new LoggingInterceptor());
+                .addInterceptor(httpBodyLogging);
         //custom Gson parser instance
         Gson gson = new GsonBuilder()
                 .setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")

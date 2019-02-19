@@ -21,8 +21,6 @@ public class GithubApp extends Application {
     @Override
     public void onCreate(){
         super.onCreate();
-        Log.d("githubAPP", " CLIENT_ID: " + CLIENT_ID);
-        Log.d("githubAPP", " CLIENT_SECRET: " + CLIENT_SECRET);
         RxReposService rxService = new RxReposService(new GithubRetorfitClient());
         this.rxRepoApi = rxService.getApi();
 

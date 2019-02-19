@@ -124,7 +124,6 @@ public class OrganizationReposActivity extends AppCompatActivity
                 () -> rxRepoApi.getRepoList(CLIENT_ID, CLIENT_SECRET),
                 url -> rxRepoApi.getReposListByLink(url + "&client_id=" + CLIENT_ID + "&client_secret=" + CLIENT_SECRET))
                 .getObservableT();
-        Log.wtf("GithubAPI", "repoList:" + repoList.toString());
         return repoList
                 .flatMap(Observable::fromIterable)//разбираем Observable<List<Repo>> на перебор Repo
                 .flatMap( //в этом flatMap используется сигнатура с двумя функциями:

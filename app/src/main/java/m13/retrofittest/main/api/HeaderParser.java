@@ -65,8 +65,6 @@ public class HeaderParser {
     }
 
     private static String getLinkElementByRel(String linkHeader, String requiredRel){
-        Log.wtf("GithubAPI", "getLInkElementByRel: linkHeader: " + linkHeader);
-        Log.wtf("GithubAPI", "getLInkElementByRel: requiredRel: " + requiredRel);
         String linkElement = "";
         if (linkHeader != null) {
             String[] links = linkHeader.split(SEPARATOR);
@@ -102,7 +100,6 @@ public class HeaderParser {
         //linkElement = response.getHeader(HEADER_NEXT);
         //last = response.getHeader(HEADER_LAST);
         //}
-        Log.wtf("GithubAPI", "getLInkElementByRel: linkElement: " + linkElement);
         return linkElement;
     }
 
