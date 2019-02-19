@@ -1,14 +1,10 @@
 package m13.retrofittest.main.api.services;
 
-import java.util.Objects;
-
 import io.reactivex.Observable;
 import io.reactivex.functions.Function;
-import m13.retrofittest.main.api.HeaderParser;
 import retrofit2.Response;
 
-import static io.reactivex.Observable.just;
-import static m13.retrofittest.main.api.HeaderParser.*;
+import static m13.retrofittest.main.api.HeaderParser.getLastPageNumber;
 
 public class PagesCounter<T> {
 

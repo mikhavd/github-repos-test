@@ -13,7 +13,7 @@ import retrofit2.http.Url;
 /**
  * Created by Mikhail Avdeev on 08.02.2019.
  */
-public interface ReposInterface {
+public interface ReposInterfaceOld {
 
     //https://api.github.com/orgs/square/repos
     @GET("orgs/{org}/repos")

@@ -12,7 +12,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import io.reactivex.Observable;
@@ -21,9 +20,7 @@ import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 import m13.retrofittest.R;
 import m13.retrofittest.main.api.GithubRetorfitClient;
-import m13.retrofittest.main.api.generated.contributors.Contributor;
 import m13.retrofittest.main.api.generated.repos.Repo;
-import m13.retrofittest.main.api.repos.ExtendedRepo;
 import m13.retrofittest.main.api.repos.ExtendedRepoLite;
 import m13.retrofittest.main.api.repos.IExtendedRepo;
 import m13.retrofittest.main.api.services.PagesConcatinator;
@@ -31,6 +28,7 @@ import m13.retrofittest.main.api.services.PagesCounter;
 import m13.retrofittest.main.api.services.RxReposInterface;
 import m13.retrofittest.main.api.services.RxReposService;
 import retrofit2.HttpException;
+import retrofit2.Response;
 
 import static m13.retrofittest.main.githubUI.GithubApp.CLIENT_ID;
 import static m13.retrofittest.main.githubUI.GithubApp.CLIENT_SECRET;
@@ -65,7 +63,7 @@ public class OrganizationReposActivity extends AppCompatActivity
         try {
             RxReposService rxService = new RxReposService(new GithubRetorfitClient());
             this.rxRepoApi = rxService.getApi();
-            loadExtendedReposContributorsCountedOnly(rxRepoApi)
+            loadExtendedReposContributorsCount(rxRepoApi)
             //loadExtendedReposWithPages(rxRepoApi)
             .onErrorReturn((Throwable ex) -> {
                 handleException((Exception) ex);
@@ -143,7 +141,7 @@ public class OrganizationReposActivity extends AppCompatActivity
     }
 
 
-    public static Observable<ExtendedRepo> loadExtendedReposWithPages(
+    /*public static Observable<ExtendedRepo> loadExtendedReposWithPages(
             RxReposInterface rxRepoApi) {
         //объект, который склеит все страницы с репозиториями
         Observable<List<Repo>> repoList = new PagesConcatinator<>(
@@ -163,14 +161,24 @@ public class OrganizationReposActivity extends AppCompatActivity
                         //...вторая использует результат первой:
                         //создаём объект (repo1, contributors) -> new ExtendedRepo(repo1, contributors));
                         (repo, contributors) -> new ExtendedRepo(repo, contributors));
-    }
+    }*/
 
-    public static Observable<ExtendedRepoLite> loadExtendedReposContributorsCountedOnly(
+    public static Observable<ExtendedRepoLite> loadExtendedReposContributorsCount(
             RxReposInterface rxRepoApi) {
         //объект, который склеит все страницы с репозиториями
         Observable<List<Repo>> repoList = new PagesConcatinator<>(
-                () -> rxRepoApi.getRepoList(CLIENT_ID, CLIENT_SECRET),
-                url -> rxRepoApi.getReposListByLink(url+"&client_id="+CLIENT_ID+"&client_secret="+CLIENT_SECRET))
+                new PagesConcatinator.ApiRequester<List<Repo>>() {
+                    @Override
+                    public Observable<Response<List<Repo>>> request() {
+                        return rxRepoApi.getRepoList(CLIENT_ID, CLIENT_SECRET);
+                    }
+                },
+                new PagesConcatinator.PageRequester<List<Repo>>() {
+                    @Override
+                    public Observable<Response<List<Repo>>> request(String url) {
+                        return rxRepoApi.getReposListByLink(url + "&client_id=" + CLIENT_ID + "&client_secret=" + CLIENT_SECRET);
+                    }
+                })
                 .getObservableT();
         Log.wtf("GithubAPI", "repoList:" + repoList.toString());
         return repoList
@@ -180,11 +188,11 @@ public class OrganizationReposActivity extends AppCompatActivity
                         (Function<Repo, Observable<Integer>>) repo -> {
                             try{
                                 return new PagesCounter<>(
-                                        () -> rxRepoApi.getСontributorsSinglePage(
+                                        () -> rxRepoApi.getContributorsSinglePage(
                                                 repo.getName(), CLIENT_ID, CLIENT_SECRET))
                                         .getObservableCount();
                             }catch (Exception e){
-                                return Observable.just(0);
+                                return Observable.just(1);
                             }
                         },
                         //...вторая использует результат первой:

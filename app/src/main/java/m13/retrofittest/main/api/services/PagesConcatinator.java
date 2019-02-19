@@ -24,22 +24,61 @@ public class PagesConcatinator<T> {
 
     private Observable<Response<T>> getObservableResponses(){
         return
-            apiRequester.firstRequest()
-                    .concatMap(new Function<Response<T>, ObservableSource<? extends Response<T>>>() {
-                        @Override
-                        public ObservableSource<? extends Response<T>> apply(Response<T> response) throws Exception {
+            apiRequester.request()
+                    .concatMap( response -> {
+                        String linkToNextPage = HeaderParser.getNextPageURL(response);
+                        if ((linkToNextPage == null) || linkToNextPage.isEmpty())
+                            return Observable.just(response);
+                        else
+                            return Observable.just(response)
+                                    .concatWith(pageRequester.request(linkToNextPage));
+                    });
+    }
+
+    private Observable<Response<T>> getPages(PageRequester<T> pageRequester, String pageURL){
+        return pageRequester.request(pageURL)
+                .concatMap(response -> {
+                    String linkToNextPage = HeaderParser.getNextPageURL(response);
+                    if ((linkToNextPage == null) || linkToNextPage.isEmpty())
+                        return Observable.just(response);
+                    else
+                        return Observable.just(response)
+                                .concatWith(getPages(pageRequester, linkToNextPage));
+                });
+    }
+
+    private Observable<Response<T>> getObservableResponsesPages(){
+        return
+            apiRequester.request()
+                    .concatMap(response -> {
+                        String linkToNextPage = HeaderParser.getNextPageURL(response);
+                        if ((linkToNextPage == null) || linkToNextPage.isEmpty())
+                            return Observable.just(response);
+                        else
+                            return Observable.just(response)
+                                    .concatWith(getPages(pageRequester, linkToNextPage));
+                    }
+                    );
+    }
+
+    Observable<Response<T>> getPageAndNext(String nextPageUrl) {
+        return ((nextPageUrl.isEmpty())
+                        ? apiRequester.request()
+                        : pageRequester.request(nextPageUrl))
+                .concatMap(response -> {
                             String linkToNextPage = HeaderParser.getNextPageURL(response);
                             if ((linkToNextPage == null) || linkToNextPage.isEmpty())
                                 return Observable.just(response);
                             else
                                 return Observable.just(response)
-                                        .concatWith(pageRequester.pageRequest(linkToNextPage));
+                                        .concatWith(getPageAndNext(linkToNextPage));
                         }
-                    });
+                );
     }
 
+
     public Observable<T> getObservableT(){
-        return getObservableResponses()
+        return getPageAndNext("")//getObservableResponsesPages() //getObservableResponses()
                 .concatMap(response -> Observable.just(response.body()));
     }
 
@@ -48,7 +87,7 @@ public class PagesConcatinator<T> {
      */
     public interface ApiRequester<T> {
 
-        Observable<Response<T>> firstRequest();
+        Observable<Response<T>> request();
     }
 
     /**
@@ -56,6 +95,6 @@ public class PagesConcatinator<T> {
      */
     public interface PageRequester<T> {
 
-        Observable<Response<T>> pageRequest(String url);
+        Observable<Response<T>> request(String url);
     }
 }
