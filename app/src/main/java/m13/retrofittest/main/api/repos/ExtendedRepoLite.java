@@ -35,13 +35,18 @@ public class ExtendedRepoLite implements IExtendedRepo{
                 toLineIfNotEmpty("Stargazers: ", String.valueOf(repo.getStargazersCount())) +
                 toLineIfNotEmpty("Description: ", repo.getDescription()) +
                 toLineIfNotEmpty("Owner: ", repo.getOwner().getLogin()) +
-                toLineIfNotEmpty("Created: : ", repo.getCreatedAt()) +
+                toLineIfNotEmpty("Created: ", repo.getCreatedAt()) +
                 toLineIfNotEmpty("GitURL: ", repo.getGitUrl()) ;
 
 
     }
 
     String toLineIfNotEmpty(String title, String line){
-        return (line.isEmpty()) ? "" : title + " " + line + NEW_LINE;
+        if (line!=null) {
+            return (line.isEmpty()) ? "" : title + " " + line + NEW_LINE;
+        }
+        else {
+            return "";
+        }
     }
 }
