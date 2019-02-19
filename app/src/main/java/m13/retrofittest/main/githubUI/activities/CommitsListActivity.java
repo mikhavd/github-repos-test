@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -35,6 +36,7 @@ public class CommitsListActivity extends AppCompatActivity implements RecyclerVi
     IExtendedRepo selectedRepo;
     //List<Contributor> contributorList;
     private TextView emptyView;
+    ArrayList<Commit> commitsFullList = new ArrayList<>();
 
     @SuppressLint("CheckResult")
     @Override
@@ -49,6 +51,9 @@ public class CommitsListActivity extends AppCompatActivity implements RecyclerVi
         recyclerView.setLayoutManager(layoutManager);
         try {
             APIInterface rxRepoApi = app.getRxRepoApi();
+            CommitsAdapter adapter = new CommitsAdapter(this, commitsFullList);
+            recyclerView.setAdapter(adapter);
+            setRecyclerView(commitsFullList);
             loadRepoCommitsList(rxRepoApi)
                     //loadExtendedReposWithPages(rxRepoApi)
                     .onErrorReturn((Throwable ex) -> {
@@ -69,10 +74,21 @@ public class CommitsListActivity extends AppCompatActivity implements RecyclerVi
         ArrayList<Commit> commits = new ArrayList<>();
             for (CommitData commitData : commitDataList)
                 commits.add(commitData.getCommit());
-            CommitsAdapter adapter = new CommitsAdapter(this, commits);
-            recyclerView.setAdapter(adapter);
-            setRecyclerView(commits);
+            commitsFullList.addAll(commits);
+        recyclerView.getAdapter().notifyDataSetChanged();
+        setRecyclerView();
     }
+
+    private void setRecyclerView() {
+        if (commitsFullList.isEmpty()) {
+            recyclerView.setVisibility(View.GONE);
+            emptyView.setVisibility(View.VISIBLE);
+        } else {
+            emptyView.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
+        }
+    }
+
 
     private void handleException(Throwable throwable) {
         //todo
