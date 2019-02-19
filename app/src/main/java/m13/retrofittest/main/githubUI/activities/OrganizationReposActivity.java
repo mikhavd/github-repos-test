@@ -64,7 +64,7 @@ public class OrganizationReposActivity extends AppCompatActivity
         setRecyclerView();
         try {
             APIInterface rxRepoApi = app.getRxRepoApi();
-            loadExtendedReposContributorsCount(rxRepoApi)
+            loadExtendedRepos(rxRepoApi)
             //loadExtendedReposWithPages(rxRepoApi)
             .onErrorReturn((Throwable ex) -> {
                 handleException((Exception) ex);
@@ -141,7 +141,7 @@ public class OrganizationReposActivity extends AppCompatActivity
         }
     }
 
-    public static Observable<ExtendedRepoLite> loadExtendedReposContributorsCount(
+    public static Observable<ExtendedRepoLite> loadExtendedRepos(
             APIInterface rxRepoApi) {
         //объект, который склеит все страницы с репозиториями
         Observable<List<Repo>> repoList = new PagesConcatinator<>(

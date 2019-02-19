@@ -34,6 +34,7 @@ public class ContributorsListActivity extends AppCompatActivity implements Recyc
     IExtendedRepo selectedRepo;
     //List<Contributor> contributorList;
     private TextView emptyView;
+    ArrayList<Contributor> contributorsFullList = new ArrayList<>();
 
     @SuppressLint("CheckResult")
     @Override
@@ -47,6 +48,10 @@ public class ContributorsListActivity extends AppCompatActivity implements Recyc
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         try {
+            ContributorsAdapter adapter = new ContributorsAdapter(this,
+                    contributorsFullList);
+            recyclerView.setAdapter(adapter);
+            setRecyclerView();
             APIInterface rxRepoApi = app.getRxRepoApi();
             loadRepoContributorsList(rxRepoApi)
                     //loadExtendedReposWithPages(rxRepoApi)
@@ -65,9 +70,8 @@ public class ContributorsListActivity extends AppCompatActivity implements Recyc
     }
 
     private void saveContributors(List<Contributor> contributors) {
-        ContributorsAdapter adapter = new ContributorsAdapter(this, contributors);
-        recyclerView.setAdapter(adapter);
-        setRecyclerView(contributors);
+        contributorsFullList.addAll(contributors);
+        recyclerView.getAdapter().notifyDataSetChanged();
     }
 
     private void handleException(Throwable throwable) {
@@ -81,8 +85,8 @@ public class ContributorsListActivity extends AppCompatActivity implements Recyc
                 .getObservableT();
     }
 
-    private void setRecyclerView(List<Contributor> contributors) {
-        if (contributors.isEmpty()){
+    private void setRecyclerView() {
+        if (contributorsFullList.isEmpty()){
             recyclerView.setVisibility(View.GONE);
             emptyView.setVisibility(View.VISIBLE);
         } else{
