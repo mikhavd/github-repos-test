@@ -13,10 +13,6 @@ public class ExtendedRepoLite implements IExtendedRepo{
         this.contributorsNumber = contributorsNumber;
     }
 
-    public Repo getRepo() {
-        return repo;
-    }
-
     public Integer getContributorsNumber() {
         return contributorsNumber;
     }

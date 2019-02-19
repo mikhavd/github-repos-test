@@ -18,5 +18,5 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:visibility="gone"
-        android:text="Данные загружаются..." />
+        android:text="Loading data..." />
 </RelativeLayout>

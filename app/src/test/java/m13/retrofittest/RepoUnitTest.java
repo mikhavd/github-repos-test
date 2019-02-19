@@ -3,8 +3,6 @@ package m13.retrofittest;
 import org.junit.Test;
 
 import m13.retrofittest.main.api.GithubRetorfitClient;
-import m13.retrofittest.main.api.generated.contributors.Contributor;
-import m13.retrofittest.main.api.repos.ExtendedRepo;
 import m13.retrofittest.main.api.services.APIInterface;
 import m13.retrofittest.main.api.services.RxReposService;
 import retrofit2.HttpException;
@@ -22,9 +20,6 @@ public class RepoUnitTest {
         //assertTrue("true",reposResponse.size() > 0);
     }
 
-    private Integer reposCount = 1;
-    private Integer contribsCount = 0;
-
     @Test
     public void rxAPITestPages(){
         RxReposService rxService = new RxReposService(new GithubRetorfitClient());
@@ -40,43 +35,6 @@ public class RepoUnitTest {
             System.out.println("    message: " + ((HttpException)ex).message());
         System.out.println("-------------");
     }
-
-    private void print(ExtendedRepo repo){
-        if (repo.getContributors() == null){
-            System.out.println("-------------");
-            System.out.println("ERROR");
-            System.out.println("-------------");
-            return;
-        }
-        reposCount++;
-        System.out.println("-------------");
-        System.out.println(reposCount + ". " + repo.getName());
-        System.out.println("contributors:" );
-        for (Contributor contributor : repo.getContributors()){
-            contribsCount++;
-            System.out.println("    " + contribsCount +". " + contributor.getLogin());
-        }
-        contribsCount = 0;
-    }
-
-    //@Test
-    /*public void SyncRepoTest() {
-        List<Repo> repos = null;
-        //получаем список репозиториев
-        ReposService reposService = new ReposService(new GithubRetorfitClient());
-        try {
-            Integer maxNumberOfRepos = 1000;
-            repos = reposService.getRepos("square", maxNumberOfRepos);
-            for (Repo repo: repos) {
-                System.out.println("repo.name: " + repo.getName());
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-         assertTrue(repos.size() > 0);
-    }*/
-
 
 }
 

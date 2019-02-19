@@ -21,7 +21,7 @@ public class BasicViewHolder extends RecyclerView.ViewHolder implements View.OnC
                     RecyclerViewClickListener itemListener) {
         super(itemView);
         this.itemListener = itemListener;
-        mainText = (TextView) itemView.findViewById(R.id.main_text_item);
+        mainText = (TextView) itemView.findViewById(R.id.main_text);
         bottomRightText = (TextView) itemView.findViewById(R.id.bottom_rigth_item);
         bottomLeftText = (TextView) itemView.findViewById(R.id.bottom_left_item);
         topRightText = (TextView) itemView.findViewById(R.id.top_right_item);

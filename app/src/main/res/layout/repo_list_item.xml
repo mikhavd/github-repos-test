@@ -1,59 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:padding="5dp"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="5dp">
 
     <TextView
-        android:id="@+id/main_text_item"
+        android:id="@+id/main_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="main text"
-        android:layout_toStartOf="@+id/top_right_item"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="0dp"
-        android:layout_marginLeft="0dp"
-
         android:textColor="?android:attr/textColorPrimary"
-        android:layout_toLeftOf="@+id/top_right_item" />
+        android:textSize="16sp"
+        android:textStyle="bold" />
 
-
-    <TextView
-        android:id="@+id/top_right_item"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/additional_info"
         android:layout_height="wrap_content"
-        android:text="top right"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="0dp"
-        android:layout_marginLeft="0dp"
+        android:layout_width="match_parent"
+        android:layout_alignParentBottom="true">
 
-        android:textColor="?android:attr/textColorPrimary" />
+        <ImageView
+            android:id="@+id/star"
+            android:layout_width="0dp"
+            android:layout_height="20dp"
+            android:layout_weight="0.3"
+            android:src="@drawable/star"
+            android:tag="check" />
 
-    <TextView
-        android:id="@+id/bottom_rigth_item"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="bottom-right-text"
-        android:layout_below="@+id/main_text_item"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:gravity="end"
-        android:textAlignment="textEnd" />
+        <TextView
+            android:id="@+id/stargazers_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="left"
+            android:textColor="#000"
+            android:textSize="16sp" />
 
-    <TextView
-        android:id="@+id/bottom_left_item"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="bottom-left-text"
-        android:layout_below="@+id/main_text_item"
-        android:gravity="end"
-        android:textAlignment="textEnd"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true" />
-</RelativeLayout>
+        <ImageView
+            android:id="@+id/fork"
+            android:layout_width="27dp"
+            android:layout_height="20dp"
+            android:layout_weight="1"
+            android:padding="2dp"
+            android:src="@drawable/fork"
+            android:tag="check" />
+
+
+        <TextView
+            android:id="@+id/contributors_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="right"
+            android:textColor="#000"
+            android:textSize="16sp" />
+
+
+    </LinearLayout>
+</LinearLayout>

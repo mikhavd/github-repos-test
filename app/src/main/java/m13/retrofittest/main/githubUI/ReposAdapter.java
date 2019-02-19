@@ -14,7 +14,7 @@ import m13.retrofittest.main.api.repos.IExtendedRepo;
 /**
  * Created by Mikhail Avdeev on 11.02.2019.
  */
-public class ReposAdapter extends RecyclerView.Adapter<BasicViewHolder> {
+public class ReposAdapter extends RecyclerView.Adapter<RepoViewHolder> {
 
 
     private final RecyclerViewClickListener itemListener;
@@ -28,21 +28,17 @@ public class ReposAdapter extends RecyclerView.Adapter<BasicViewHolder> {
 
     @NonNull
     @Override
-    public BasicViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item, parent, false);
-        return new BasicViewHolder(v, this.itemListener);
+    public RepoViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.repo_list_item, parent, false);
+        return new RepoViewHolder(v, this.itemListener);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull BasicViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RepoViewHolder holder, int position) {
         IExtendedRepo repo = repos.get(position);
-        holder.setMainText(repo.getName());
-        holder.setBottomRightText("★: " +
-                String.valueOf(repo.getStargazersCount()));
-        holder.setBottomLeftText(String.valueOf(position + 1));
-        holder.setTopRightText("Contibutors: " +
-                String.valueOf(repo.getContributorsNumber()));
-
+        holder.setRepoName(repo.getName());
+        holder.setStargazersNumber(String.valueOf(repo.getStargazersCount()));
+        holder.setContributorsNumber(String.valueOf(repo.getContributorsNumber()));
     }
 
     @Override
