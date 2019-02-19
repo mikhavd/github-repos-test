@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
@@ -12,50 +12,54 @@
         android:text="main text"
         android:textColor="?android:attr/textColorPrimary"
         android:textSize="16sp"
-        android:textStyle="bold" />
+        android:layout_alignParentLeft="true"
+        android:textStyle="bold"
+        android:layout_alignParentStart="true" />
+        <!-- android:layout_above="@id/additional_info" -->
 
-    <LinearLayout
+
+    <RelativeLayout
         android:id="@+id/additional_info"
+        android:layout_below="@id/main_text"
         android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:layout_alignParentBottom="true">
+        android:layout_width="wrap_content">
 
         <ImageView
             android:id="@+id/star"
-            android:layout_width="0dp"
+            android:layout_width="17dp"
             android:layout_height="20dp"
-            android:layout_weight="0.3"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
             android:src="@drawable/star"
             android:tag="check" />
 
         <TextView
             android:id="@+id/stargazers_text"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:text="left"
             android:textColor="#000"
+            android:layout_toRightOf="@id/star"
             android:textSize="16sp" />
 
         <ImageView
             android:id="@+id/fork"
-            android:layout_width="27dp"
+            android:layout_width="17dp"
             android:layout_height="20dp"
-            android:layout_weight="1"
-            android:padding="2dp"
             android:src="@drawable/fork"
+            android:layout_toRightOf="@id/stargazers_text"
             android:tag="check" />
 
 
         <TextView
             android:id="@+id/contributors_text"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_toRightOf="@id/fork"
             android:text="right"
             android:textColor="#000"
             android:textSize="16sp" />
 
 
-    </LinearLayout>
-</LinearLayout>
+    </RelativeLayout>
+</RelativeLayout>
