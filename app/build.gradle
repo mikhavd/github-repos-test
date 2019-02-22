@@ -1,11 +1,11 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 27
+    compileSdkVersion 26
     defaultConfig {
         applicationId "m13.retrofittest"
         minSdkVersion 15
-        targetSdkVersion 27
+        targetSdkVersion 26
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -64,6 +64,8 @@ android {
     compileOptions {
         sourceCompatibility = '1.8'
         targetCompatibility = '1.8'
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 }
 
@@ -88,5 +90,4 @@ dependencies {
     implementation 'com.squareup.retrofit2:adapter-rxjava2:2.5.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:3.9.1'
     //implementation 'com.github.eclipse:egit-github:v5.2.0.201812061821-r'
-
 }
