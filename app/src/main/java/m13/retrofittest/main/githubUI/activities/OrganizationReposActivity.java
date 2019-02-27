@@ -70,7 +70,7 @@ public class OrganizationReposActivity extends AppCompatActivity
                 layoutManager.getOrientation());
         recyclerView.addItemDecoration(dividerItemDecoration);
         try {
-            APIInterface rxRepoApi = app.getRxRepoApi();
+            APIInterface rxRepoApi = app.getApiInterface(APIInterface.class);
             loadExtendedRepos(rxRepoApi)
             //loadExtendedReposWithPages(rxRepoApi)
             .onErrorReturn((Throwable ex) -> {

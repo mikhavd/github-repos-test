@@ -61,7 +61,7 @@ public class ContributorsListActivity extends AppCompatActivity implements Recyc
         recyclerView.addItemDecoration(dividerItemDecoration);
 
         try {
-            APIInterface rxRepoApi = app.getRxRepoApi();
+            APIInterface rxRepoApi = app.getApiInterface(APIInterface.class);
 
             loadRepoContributorsList(rxRepoApi)
                     //loadExtendedReposWithPages(rxRepoApi)

@@ -55,7 +55,7 @@ public class CommitsListActivity extends AppCompatActivity implements RecyclerVi
                 layoutManager.getOrientation());
         recyclerView.addItemDecoration(dividerItemDecoration);
         try {
-            APIInterface rxRepoApi = app.getRxRepoApi();
+            APIInterface rxRepoApi = app.getApiInterface(APIInterface.class); //app.getRxRepoApi();
             CommitsAdapter adapter = new CommitsAdapter(this, commitsFullList);
             recyclerView.setAdapter(adapter);
             setRecyclerView(commitsFullList);

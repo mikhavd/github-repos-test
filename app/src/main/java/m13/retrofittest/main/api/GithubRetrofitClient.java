@@ -22,17 +22,17 @@ import static m13.retrofittest.main.githubUI.GithubApp.CLIENT_SECRET;
 /**
  * Created by Mikhail Avdeev on 08.02.2019.
  */
-public class GithubRetorfitClient {
+public class GithubRetrofitClient {
 
     //todo: https://developer.github.com/v3/media/#request-specific-version
     public static final String BASE_URL = "https://api.github.com";
     private final Retrofit retrofit;
 
-    public GithubRetorfitClient(){
+    public GithubRetrofitClient(){
         this.retrofit = initRetrofit();
     }
 
-    Retrofit getRetrofit() {
+    public Retrofit getRetrofit() {
         return this.retrofit;
     }
 

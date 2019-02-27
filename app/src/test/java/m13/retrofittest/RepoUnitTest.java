@@ -2,9 +2,6 @@ package m13.retrofittest;
 
 import org.junit.Test;
 
-import m13.retrofittest.main.api.GithubRetorfitClient;
-import m13.retrofittest.main.api.services.APIInterface;
-import m13.retrofittest.main.api.services.RxReposService;
 import retrofit2.HttpException;
 
 /**
@@ -22,8 +19,8 @@ public class RepoUnitTest {
 
     @Test
     public void rxAPITestPages(){
-        RxReposService rxService = new RxReposService(new GithubRetorfitClient());
-        APIInterface rxRepoApi = rxService.getApi();
+        //RxReposService rxService = new RxReposService(new GithubRetrofitClient());
+        //APIInterface rxRepoApi = rxService.getApi();
         //OrganizationReposActivity.loadExtendedReposFromPages(rxRepoApi, this::print, this::printExInfo);
     }
 

@@ -1,13 +1,10 @@
 package m13.retrofittest.main.githubUI;
 
 import android.app.Application;
-import android.util.Log;
 
 import m13.retrofittest.BuildConfig;
-import m13.retrofittest.main.api.GithubRetorfitClient;
+import m13.retrofittest.main.api.GithubRetrofitClient;
 import m13.retrofittest.main.api.repos.IExtendedRepo;
-import m13.retrofittest.main.api.services.APIInterface;
-import m13.retrofittest.main.api.services.RxReposService;
 
 /**
  * Created by Mikhail Avdeev on 11.02.2019.
@@ -15,15 +12,15 @@ import m13.retrofittest.main.api.services.RxReposService;
 public class GithubApp extends Application {
     public static final String CLIENT_ID = m13.retrofittest.BuildConfig.CLIENT_ID;
     public static final String CLIENT_SECRET = BuildConfig.CLIENT_SECRET;
-    private APIInterface rxRepoApi;
     private IExtendedRepo selectedRepo;
+    private GithubRetrofitClient githubClient;
 
     @Override
     public void onCreate(){
         super.onCreate();
-        RxReposService rxService = new RxReposService(new GithubRetorfitClient());
-        this.rxRepoApi = rxService.getApi();
-
+        this.githubClient = new GithubRetrofitClient();
+        //ApiService<APIInterface> apiService = new ApiService<>(githubClient);
+        //apiInterface = apiService.getApi();
     }
 
 
@@ -36,7 +33,13 @@ public class GithubApp extends Application {
         this.selectedRepo = selectedRepo;
     }
 
-    public APIInterface getRxRepoApi() {
-        return rxRepoApi;
+    public <T> T getApiInterface(Class<T> tClass) {
+        //return (new ApiService<>(githubClient, tClass)).getApi();
+        return githubClient.getRetrofit().create(tClass);
     }
+
+
+    //public APIInterface getRxRepoApi() {
+        //return apiInterface;
+    //}
 }
