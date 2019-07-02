@@ -18,7 +18,7 @@ public class PagesConcatinator<T> {
         this.pageRequester = pageRequester;
     }
 
-    Observable<Response<T>> getPageAndNext(String nextPageUrl) {
+    private Observable<Response<T>> getPageAndNext(String nextPageUrl) {
         return ((nextPageUrl.isEmpty())
                         ? apiRequester.request()
                         : pageRequester.request(nextPageUrl))

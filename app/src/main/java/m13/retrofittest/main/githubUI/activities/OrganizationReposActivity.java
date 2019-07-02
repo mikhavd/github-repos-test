@@ -17,9 +17,11 @@ import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 import m13.retrofittest.R;
+import m13.retrofittest.main.api.generated.contributors.Contributor;
 import m13.retrofittest.main.api.generated.repos.Repo;
 import m13.retrofittest.main.api.repos.ExtendedRepoLite;
 import m13.retrofittest.main.api.repos.IExtendedRepo;
@@ -30,6 +32,7 @@ import m13.retrofittest.main.githubUI.GithubApp;
 import m13.retrofittest.main.githubUI.RecyclerViewClickListener;
 import m13.retrofittest.main.githubUI.ReposAdapter;
 import retrofit2.HttpException;
+import retrofit2.Response;
 
 import static m13.retrofittest.main.githubUI.GithubApp.CLIENT_ID;
 import static m13.retrofittest.main.githubUI.GithubApp.CLIENT_SECRET;
@@ -128,19 +131,32 @@ public class OrganizationReposActivity extends AppCompatActivity
                 .flatMap(Observable::fromIterable)//разбираем Observable<List<Repo>> на перебор Repo
                 .flatMap( //в этом flatMap используется сигнатура с двумя функциями:
                         //первая возвращает число контрибуторов проекта...
-                        (Function<Repo, Observable<Integer>>) repo -> {
-                            try{
-                                return new PagesCounter<>(
-                                        () -> rxRepoApi.getContributorsSinglePage(
-                                                repo.getName(), CLIENT_ID, CLIENT_SECRET))
-                                        .getObservableCount();
-                            }catch (Exception e){
-                                return Observable.just(1);
+                        new Function<Repo, Observable<Integer>>() {
+                            @Override
+                            public Observable<Integer> apply(Repo repo) throws Exception {
+                                try {
+                                    return new PagesCounter<>(
+                                            new PagesCounter.SinglePageRequester<List<Contributor>>() {
+                                                @Override
+                                                public Observable<Response<List<Contributor>>> singlePageRequest() {
+                                                    return rxRepoApi.getContributorsSinglePage(
+                                                            repo.getName(), CLIENT_ID, CLIENT_SECRET);
+                                                }
+                                            })
+                                            .getObservableCount();
+                                } catch (Exception e) {
+                                    return Observable.just(1);
+                                }
                             }
                         },
                         //...вторая использует результат первой:
                         //создаём объект (repo1, contributorsNumber) -> new ExtendedRepoLite(repo1, contributorsNUmber));
-                        ExtendedRepoLite::new);
+                        new BiFunction<Repo, Integer, ExtendedRepoLite>() {
+                            @Override
+                            public ExtendedRepoLite apply(Repo repo1, Integer contributorsNumber) throws Exception {
+                                return new ExtendedRepoLite(repo1, contributorsNumber);
+                            }
+                        });
     }
 
 

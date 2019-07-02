@@ -1,4 +1,6 @@
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-android'
 
 android {
     compileSdkVersion 26
@@ -89,5 +91,9 @@ dependencies {
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.0'
     implementation 'com.squareup.retrofit2:adapter-rxjava2:2.5.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:3.9.1'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     //implementation 'com.github.eclipse:egit-github:v5.2.0.201812061821-r'
+}
+repositories {
+    mavenCentral()
 }

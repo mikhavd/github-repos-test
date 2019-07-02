@@ -1,16 +1,10 @@
 package m13.retrofittest.main.api;
 
-import android.util.Log;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import java.io.IOException;
-
-import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.Response;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
@@ -36,7 +30,7 @@ public class GithubRetrofitClient {
         return this.retrofit;
     }
 
-    static private Retrofit initRetrofit(){
+    static private Retrofit initRetrofit() {
         // Add the interceptor to OkHttpClient
         HttpLoggingInterceptor httpBodyLogging = new HttpLoggingInterceptor();
         httpBodyLogging

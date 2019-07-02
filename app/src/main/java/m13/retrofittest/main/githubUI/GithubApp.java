@@ -19,8 +19,6 @@ public class GithubApp extends Application {
     public void onCreate(){
         super.onCreate();
         this.githubClient = new GithubRetrofitClient();
-        //ApiService<APIInterface> apiService = new ApiService<>(githubClient);
-        //apiInterface = apiService.getApi();
     }
 
 
@@ -34,12 +32,6 @@ public class GithubApp extends Application {
     }
 
     public <T> T getApiInterface(Class<T> tClass) {
-        //return (new ApiService<>(githubClient, tClass)).getApi();
         return githubClient.getRetrofit().create(tClass);
     }
-
-
-    //public APIInterface getRxRepoApi() {
-        //return apiInterface;
-    //}
 }
