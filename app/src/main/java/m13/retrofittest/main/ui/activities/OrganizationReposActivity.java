@@ -7,7 +7,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -56,7 +55,7 @@ public class OrganizationReposActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         app = (GithubApp) getApplicationContext();
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.basic_activity);
         //create and populate adapter
         setTitle("Github repositories of Square");
         extendedRepos = new ArrayList<>();

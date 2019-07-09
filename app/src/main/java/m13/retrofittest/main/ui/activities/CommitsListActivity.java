@@ -7,7 +7,6 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -46,7 +45,7 @@ public class CommitsListActivity extends AppCompatActivity implements RecyclerVi
         GithubApp app = (GithubApp) getApplicationContext();
         this.selectedRepo = app.getSelectedRepo();
         setTitle("Commits of " + selectedRepo.getName());
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.basic_activity);
         recyclerView = findViewById(R.id.posts_recycle_view);
         emptyView = findViewById(R.id.empty_view);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);

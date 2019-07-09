@@ -45,7 +45,7 @@ public class ContributorsListActivity extends AppCompatActivity implements Recyc
         GithubApp app = (GithubApp) getApplicationContext();
         this.selectedRepo = app.getSelectedRepo();
         setTitle("Contributors of " + selectedRepo.getName());
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.basic_activity);
         recyclerView = findViewById(R.id.posts_recycle_view);
         emptyView = findViewById(R.id.empty_view);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
