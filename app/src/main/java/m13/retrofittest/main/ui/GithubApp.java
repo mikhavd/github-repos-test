@@ -24,6 +24,8 @@ public class GithubApp extends Application {
         this.githubClient = new GithubRetrofitClient();
         AppDatabase db = Room.databaseBuilder(getApplicationContext(),
                 AppDatabase.class, "database-name").build();
+        //did it: https://developer.android.com/training/data-storage/room/index.html#java
+        // todo continue:https://codelabs.developers.google.com/codelabs/android-room-with-a-view-kotlin/#0
     }
 
 
