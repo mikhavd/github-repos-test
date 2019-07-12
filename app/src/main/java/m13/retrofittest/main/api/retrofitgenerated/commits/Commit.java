@@ -1,4 +1,4 @@
-package m13.retrofittest.main.api.generated.commits;
+package m13.retrofittest.main.api.retrofitgenerated.commits;
 
 /**
  * Created by Mikhail Avdeev on 19.02.2019.

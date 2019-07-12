@@ -10,8 +10,8 @@ import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-import static m13.retrofittest.main.githubUI.GithubApp.CLIENT_ID;
-import static m13.retrofittest.main.githubUI.GithubApp.CLIENT_SECRET;
+import static m13.retrofittest.main.ui.GithubApp.CLIENT_ID;
+import static m13.retrofittest.main.ui.GithubApp.CLIENT_SECRET;
 
 /**
  * Created by Mikhail Avdeev on 08.02.2019.

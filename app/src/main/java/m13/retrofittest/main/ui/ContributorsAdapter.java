@@ -1,4 +1,4 @@
-package m13.retrofittest.main.githubUI;
+package m13.retrofittest.main.ui;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import java.util.List;
 
 import m13.retrofittest.R;
-import m13.retrofittest.main.api.generated.contributors.Contributor;
+import m13.retrofittest.main.api.retrofitgenerated.contributors.Contributor;
 
 /**
  * Created by Mikhail Avdeev on 13.02.2019.

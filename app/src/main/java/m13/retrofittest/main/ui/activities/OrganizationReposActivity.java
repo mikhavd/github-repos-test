@@ -1,4 +1,4 @@
-package m13.retrofittest.main.githubUI.activities;
+package m13.retrofittest.main.ui.activities;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -16,25 +16,22 @@ import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 import m13.retrofittest.R;
-import m13.retrofittest.main.api.generated.contributors.Contributor;
-import m13.retrofittest.main.api.generated.repos.Repo;
-import m13.retrofittest.main.api.repos.ExtendedRepoLite;
+import m13.retrofittest.main.api.retrofitgenerated.repos.Repo;
+import m13.retrofittest.main.api.repos.Repository;
 import m13.retrofittest.main.api.repos.IExtendedRepo;
 import m13.retrofittest.main.api.services.PagesConcatinator;
 import m13.retrofittest.main.api.services.PagesCounter;
 import m13.retrofittest.main.api.services.APIInterface;
-import m13.retrofittest.main.githubUI.GithubApp;
-import m13.retrofittest.main.githubUI.RecyclerViewClickListener;
-import m13.retrofittest.main.githubUI.ReposAdapter;
+import m13.retrofittest.main.ui.GithubApp;
+import m13.retrofittest.main.ui.RecyclerViewClickListener;
+import m13.retrofittest.main.ui.ReposAdapter;
 import retrofit2.HttpException;
-import retrofit2.Response;
 
-import static m13.retrofittest.main.githubUI.GithubApp.CLIENT_ID;
-import static m13.retrofittest.main.githubUI.GithubApp.CLIENT_SECRET;
+import static m13.retrofittest.main.ui.GithubApp.CLIENT_ID;
+import static m13.retrofittest.main.ui.GithubApp.CLIENT_SECRET;
 
 /**
  * Created by Mikhail Avdeev on 11.02.2019.
@@ -78,7 +75,7 @@ public class OrganizationReposActivity extends AppCompatActivity
             .onErrorReturn((Throwable ex) -> {
                 handleException((Exception) ex);
                 //empty object of the datatype
-                return new ExtendedRepoLite(null, null);
+                return new Repository(null, null);
             })
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
@@ -119,7 +116,7 @@ public class OrganizationReposActivity extends AppCompatActivity
     }
 
 
-    public static Observable<ExtendedRepoLite> loadExtendedRepos(
+    public static Observable<Repository> loadExtendedRepos(
             APIInterface rxRepoApi) {
         //объект, который склеит все страницы с репозиториями
         Observable<List<Repo>> repoList = new PagesConcatinator<>(
@@ -130,32 +127,19 @@ public class OrganizationReposActivity extends AppCompatActivity
                 .flatMap(Observable::fromIterable)//разбираем Observable<List<Repo>> на перебор Repo
                 .flatMap( //в этом flatMap используется сигнатура с двумя функциями:
                         //первая возвращает число контрибуторов проекта...
-                        new Function<Repo, Observable<Integer>>() {
-                            @Override
-                            public Observable<Integer> apply(Repo repo) throws Exception {
-                                try {
-                                    return new PagesCounter<>(
-                                            new PagesCounter.SinglePageRequester<List<Contributor>>() {
-                                                @Override
-                                                public Observable<Response<List<Contributor>>> singlePageRequest() {
-                                                    return rxRepoApi.getContributorsSinglePage(
-                                                            repo.getName(), CLIENT_ID, CLIENT_SECRET);
-                                                }
-                                            })
-                                            .getObservableCount();
-                                } catch (Exception e) {
-                                    return Observable.just(1);
-                                }
+                        (Function<Repo, Observable<Integer>>) repo -> {
+                            try {
+                                return new PagesCounter<>(
+                                        () -> rxRepoApi.getContributorsSinglePage(
+                                                repo.getName(), CLIENT_ID, CLIENT_SECRET))
+                                        .getObservableCount();
+                            } catch (Exception e) {
+                                return Observable.just(1);
                             }
                         },
                         //...вторая использует результат первой:
-                        //создаём объект (repo1, contributorsNumber) -> new ExtendedRepoLite(repo1, contributorsNUmber));
-                        new BiFunction<Repo, Integer, ExtendedRepoLite>() {
-                            @Override
-                            public ExtendedRepoLite apply(Repo repo1, Integer contributorsNumber) throws Exception {
-                                return new ExtendedRepoLite(repo1, contributorsNumber);
-                            }
-                        });
+                        //создаём объект (repo1, contributorsNumber) -> new Repository(repo1, contributorsNUmber));
+                        Repository::new);
     }
 
 

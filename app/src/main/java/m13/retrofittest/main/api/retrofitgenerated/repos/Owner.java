@@ -1,66 +1,64 @@
-package m13.retrofittest.main.api.generated.commits;
 
-/**
- * Created by Mikhail Avdeev on 19.02.2019.
- */
+package m13.retrofittest.main.api.retrofitgenerated.repos;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Committer_ {
+public class Owner {
 
-    @ SerializedName("login")
-    @ Expose
+    @SerializedName("login")
+    @Expose
     private String login;
-    @ SerializedName("id")
-    @ Expose
+    @SerializedName("id")
+    @Expose
     private Integer id;
-    @ SerializedName("node_id")
-    @ Expose
+    @SerializedName("node_id")
+    @Expose
     private String nodeId;
-    @ SerializedName("avatar_url")
-    @ Expose
+    @SerializedName("avatar_url")
+    @Expose
     private String avatarUrl;
-    @ SerializedName("gravatar_id")
-    @ Expose
+    @SerializedName("gravatar_id")
+    @Expose
     private String gravatarId;
-    @ SerializedName("url")
-    @ Expose
+    @SerializedName("url")
+    @Expose
     private String url;
-    @ SerializedName("html_url")
-    @ Expose
+    @SerializedName("html_url")
+    @Expose
     private String htmlUrl;
-    @ SerializedName("followers_url")
-    @ Expose
+    @SerializedName("followers_url")
+    @Expose
     private String followersUrl;
-    @ SerializedName("following_url")
-    @ Expose
+    @SerializedName("following_url")
+    @Expose
     private String followingUrl;
-    @ SerializedName("gists_url")
-    @ Expose
+    @SerializedName("gists_url")
+    @Expose
     private String gistsUrl;
-    @ SerializedName("starred_url")
-    @ Expose
+    @SerializedName("starred_url")
+    @Expose
     private String starredUrl;
-    @ SerializedName("subscriptions_url")
-    @ Expose
+    @SerializedName("subscriptions_url")
+    @Expose
     private String subscriptionsUrl;
-    @ SerializedName("organizations_url")
-    @ Expose
+    @SerializedName("organizations_url")
+    @Expose
     private String organizationsUrl;
-    @ SerializedName("repos_url")
-    @ Expose
+    @SerializedName("repos_url")
+    @Expose
     private String reposUrl;
-    @ SerializedName("events_url")
-    @ Expose
+    @SerializedName("events_url")
+    @Expose
     private String eventsUrl;
-    @ SerializedName("received_events_url")
-    @ Expose
+    @SerializedName("received_events_url")
+    @Expose
     private String receivedEventsUrl;
-    @ SerializedName("type")
-    @ Expose
+    @SerializedName("type")
+    @Expose
     private String type;
-    @ SerializedName("site_admin")
-    @ Expose
+    @SerializedName("site_admin")
+    @Expose
     private Boolean siteAdmin;
 
     public String getLogin() {

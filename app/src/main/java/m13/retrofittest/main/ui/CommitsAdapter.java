@@ -1,4 +1,4 @@
-package m13.retrofittest.main.githubUI;
+package m13.retrofittest.main.ui;
 
 /**
  * Created by Mikhail Avdeev on 19.02.2019.
@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import java.util.List;
 
 import m13.retrofittest.R;
-import m13.retrofittest.main.api.generated.commits.Commit;
+import m13.retrofittest.main.api.retrofitgenerated.commits.Commit;
 
 
 /**

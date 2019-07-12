@@ -1,10 +1,13 @@
-package m13.retrofittest.main.githubUI;
+package m13.retrofittest.main.ui;
 
 import android.app.Application;
+
+import androidx.room.Room;
 
 import m13.retrofittest.BuildConfig;
 import m13.retrofittest.main.api.GithubRetrofitClient;
 import m13.retrofittest.main.api.repos.IExtendedRepo;
+import m13.retrofittest.main.database.AppDatabase;
 
 /**
  * Created by Mikhail Avdeev on 11.02.2019.
@@ -19,6 +22,8 @@ public class GithubApp extends Application {
     public void onCreate(){
         super.onCreate();
         this.githubClient = new GithubRetrofitClient();
+        AppDatabase db = Room.databaseBuilder(getApplicationContext(),
+                AppDatabase.class, "database-name").build();
     }
 
 

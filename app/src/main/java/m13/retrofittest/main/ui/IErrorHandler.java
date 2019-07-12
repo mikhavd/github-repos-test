@@ -1,6 +1,4 @@
-package m13.retrofittest.main.githubUI;
-
-import retrofit2.HttpException;
+package m13.retrofittest.main.ui;
 
 /**
  * Created by Mikhail Avdeev on 12.02.2019.

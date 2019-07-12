@@ -3,9 +3,9 @@ package m13.retrofittest.main.api.services;
 import java.util.List;
 
 import io.reactivex.Observable;
-import m13.retrofittest.main.api.generated.commits.CommitData;
-import m13.retrofittest.main.api.generated.contributors.Contributor;
-import m13.retrofittest.main.api.generated.repos.Repo;
+import m13.retrofittest.main.api.retrofitgenerated.commits.CommitData;
+import m13.retrofittest.main.api.retrofitgenerated.contributors.Contributor;
+import m13.retrofittest.main.api.retrofitgenerated.repos.Repo;
 import retrofit2.Response;
 import retrofit2.http.GET;
 import retrofit2.http.Path;

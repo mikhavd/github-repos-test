@@ -1,5 +1,5 @@
 
-package m13.retrofittest.main.api.generated.repos;
+package m13.retrofittest.main.api.retrofitgenerated.repos;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

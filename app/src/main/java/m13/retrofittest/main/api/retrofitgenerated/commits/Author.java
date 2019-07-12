@@ -1,4 +1,4 @@
-package m13.retrofittest.main.api.generated.commits;
+package m13.retrofittest.main.api.retrofitgenerated.commits;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

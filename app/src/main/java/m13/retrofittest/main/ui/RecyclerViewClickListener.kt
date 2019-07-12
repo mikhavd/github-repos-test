@@ -1,4 +1,4 @@
-package m13.retrofittest.main.githubUI
+package m13.retrofittest.main.ui
 
 import android.view.View
 

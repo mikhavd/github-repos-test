@@ -1,4 +1,4 @@
-package m13.retrofittest.main.githubUI.activities;
+package m13.retrofittest.main.ui.activities;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
@@ -16,16 +16,16 @@ import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import m13.retrofittest.R;
-import m13.retrofittest.main.api.generated.contributors.Contributor;
+import m13.retrofittest.main.api.retrofitgenerated.contributors.Contributor;
 import m13.retrofittest.main.api.repos.IExtendedRepo;
 import m13.retrofittest.main.api.services.PagesConcatinator;
 import m13.retrofittest.main.api.services.APIInterface;
-import m13.retrofittest.main.githubUI.ContributorsAdapter;
-import m13.retrofittest.main.githubUI.GithubApp;
-import m13.retrofittest.main.githubUI.RecyclerViewClickListener;
+import m13.retrofittest.main.ui.ContributorsAdapter;
+import m13.retrofittest.main.ui.GithubApp;
+import m13.retrofittest.main.ui.RecyclerViewClickListener;
 
-import static m13.retrofittest.main.githubUI.GithubApp.CLIENT_ID;
-import static m13.retrofittest.main.githubUI.GithubApp.CLIENT_SECRET;
+import static m13.retrofittest.main.ui.GithubApp.CLIENT_ID;
+import static m13.retrofittest.main.ui.GithubApp.CLIENT_SECRET;
 
 /**
  * Created by Mikhail Avdeev on 13.02.2019.
