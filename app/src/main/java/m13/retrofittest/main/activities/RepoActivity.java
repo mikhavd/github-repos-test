@@ -1,11 +1,12 @@
-package m13.retrofittest.main.ui.activities;
+package m13.retrofittest.main.activities;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.widget.Button;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import m13.retrofittest.R;
 import m13.retrofittest.main.api.repos.IExtendedRepo;

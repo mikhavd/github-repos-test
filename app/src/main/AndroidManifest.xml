@@ -16,15 +16,15 @@
         tools:ignore="GoogleAppIndexingWarning"
         android:fullBackupContent="@xml/backup_descriptor">
 
-        <activity android:name=".main.ui.activities.OrganizationReposActivity">
+        <activity android:name=".main.activities.OrganizationReposActivity">
         <intent-filter>
             <action android:name="android.intent.action.MAIN" />
             <category android:name="android.intent.category.LAUNCHER" />
         </intent-filter>
         </activity>
-        <activity android:name=".main.ui.activities.ContributorsListActivity" />
-        <activity android:name=".main.ui.activities.CommitsListActivity" />
-        <activity android:name=".main.ui.activities.RepoActivity" />
+        <activity android:name=".main.activities.ContributorsListActivity" />
+        <activity android:name=".main.activities.CommitsListActivity" />
+        <activity android:name=".main.activities.RepoActivity" />
     </application>
 
 </manifest>

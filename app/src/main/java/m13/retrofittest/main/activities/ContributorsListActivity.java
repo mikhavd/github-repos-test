@@ -1,13 +1,14 @@
-package m13.retrofittest.main.ui.activities;
+package m13.retrofittest.main.activities;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,10 +17,10 @@ import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import m13.retrofittest.R;
-import m13.retrofittest.main.api.retrofitgenerated.contributors.Contributor;
 import m13.retrofittest.main.api.repos.IExtendedRepo;
-import m13.retrofittest.main.api.services.PagesConcatinator;
+import m13.retrofittest.main.api.retrofitgenerated.contributors.Contributor;
 import m13.retrofittest.main.api.services.APIInterface;
+import m13.retrofittest.main.api.services.PagesConcatinator;
 import m13.retrofittest.main.ui.ContributorsAdapter;
 import m13.retrofittest.main.ui.GithubApp;
 import m13.retrofittest.main.ui.RecyclerViewClickListener;

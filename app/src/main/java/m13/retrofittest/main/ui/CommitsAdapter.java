@@ -3,14 +3,15 @@ package m13.retrofittest.main.ui;
 /**
  * Created by Mikhail Avdeev on 19.02.2019.
  */
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.recyclerview.widget.RecyclerView;
+
 import java.util.List;
 
+import io.reactivex.annotations.NonNull;
 import m13.retrofittest.R;
 import m13.retrofittest.main.api.retrofitgenerated.commits.Commit;
 
@@ -31,7 +32,6 @@ public class CommitsAdapter extends RecyclerView.Adapter<BasicViewHolder> {
         this.commits = commits;
     }
 
-    @NonNull
     @Override
     public BasicViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item, parent, false);

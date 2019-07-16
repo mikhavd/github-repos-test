@@ -1,15 +1,17 @@
-package m13.retrofittest.main.ui.activities;
+package m13.retrofittest.main.activities;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -139,7 +141,7 @@ public class OrganizationReposActivity extends AppCompatActivity
                         },
                         //...вторая использует результат первой:
                         //создаём объект (repo1, contributorsNumber) -> new Repository(repo1, contributorsNUmber));
-                        Repository::new);
+                        (repo1, contributorsNumber) -> new Repository(repo1, contributorsNumber));
     }
 
 
