@@ -3,16 +3,15 @@ package m13.retrofittest.main.ui
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-
 import m13.retrofittest.R
-import m13.retrofittest.main.repos.IExtendedRepo
 import m13.retrofittest.main.githubUI.RecyclerViewClickListener
+import m13.retrofittest.main.repos.IExtendedRepo
 
 /**
  * Created by Mikhail Avdeev on 11.02.2019.
  */
-class ReposAdapter(private val itemListener: RecyclerViewClickListener,
-                   private val repos: List<IExtendedRepo>?) : RecyclerView.Adapter<RepoViewHolder>() {
+private class KotlinReposAdapter(private val itemListener: RecyclerViewClickListener,
+                         private val repos: List<IExtendedRepo>?) : RecyclerView.Adapter<RepoViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RepoViewHolder {
         val v = LayoutInflater.from(parent.context).inflate(R.layout.repo_list_item, parent, false)

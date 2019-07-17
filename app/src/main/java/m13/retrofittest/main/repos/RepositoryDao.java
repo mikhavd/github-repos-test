@@ -11,7 +11,7 @@ import java.util.List;
 @Dao
 public interface RepositoryDao {
     @Query("SELECT * FROM repository")
-    LiveData<List<Repository>> getAll();
+    LiveData<List<Repository>> getAllRepositories();
 
     @Query("SELECT * FROM repository WHERE uid IN (:repositoryIds)")
     List<Repository> loadAllByIds(int[] repositoryIds);
@@ -20,9 +20,12 @@ public interface RepositoryDao {
     Repository findByName(String fullName);
 
     @Insert
-    void insertAll(Repository... repositories);
+    void insert(Repository... repositories);
 
     @Delete
     void delete(Repository repository);
+
+    @Query("DELETE FROM repository")
+    void deleteAll();
 }
 

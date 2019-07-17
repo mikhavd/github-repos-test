@@ -47,7 +47,7 @@ public class CommitsListActivity extends AppCompatActivity implements RecyclerVi
         this.selectedRepo = app.getSelectedRepo();
         setTitle("Commits of " + selectedRepo.getFullName());
         setContentView(R.layout.basic_activity);
-        recyclerView = findViewById(R.id.posts_recycle_view);
+        RecyclerView recyclerView = findViewById(R.id.viewmodel_recyclerview);
         emptyView = findViewById(R.id.empty_view);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);

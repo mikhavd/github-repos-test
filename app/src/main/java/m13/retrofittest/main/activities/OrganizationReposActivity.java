@@ -1,35 +1,31 @@
 package m13.retrofittest.main.activities;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 import m13.retrofittest.R;
 import m13.retrofittest.main.api.generated.repos.Repo;
-import m13.retrofittest.main.repos.IExtendedRepo;
-import m13.retrofittest.main.repos.Repository;
 import m13.retrofittest.main.api.services.APIInterface;
 import m13.retrofittest.main.api.services.PagesConcatinator;
 import m13.retrofittest.main.api.services.PagesCounter;
 import m13.retrofittest.main.application.GithubApp;
-import m13.retrofittest.main.githubUI.RecyclerViewClickListener;
-import m13.retrofittest.main.ui.ReposAdapter;
+import m13.retrofittest.main.repos.Repository;
+import m13.retrofittest.main.ui.RepositoriesListAdapter;
+import m13.retrofittest.main.ui.RepositoriesViewModel;
 import retrofit2.HttpException;
 
 import static m13.retrofittest.main.application.GithubApp.CLIENT_ID;
@@ -38,71 +34,55 @@ import static m13.retrofittest.main.application.GithubApp.CLIENT_SECRET;
 /**
  * Created by Mikhail Avdeev on 11.02.2019.
  */
-public class OrganizationReposActivity extends AppCompatActivity
-        implements RecyclerViewClickListener {
-    RecyclerView recyclerView;
-    //List<Repo> repos;
-    List<IExtendedRepo> extendedRepos;
+public class OrganizationReposActivity extends AppCompatActivity {
     private final static String organizationName = "square";
     private final static Integer maxNumberPerPage = 1000;
-
     private TextView emptyView;
-    private GithubApp app;
 
     @SuppressLint("CheckResult")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        app = (GithubApp) getApplicationContext();
-        setContentView(R.layout.basic_activity);
+        GithubApp app = (GithubApp) getApplicationContext();
+
         //create and populate adapter
         setTitle("Github repositories of Square");
-        extendedRepos = new ArrayList<>();
-        recyclerView = findViewById(R.id.posts_recycle_view);
-        emptyView = findViewById(R.id.empty_view);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        setContentView(R.layout.basic_activity);
 
-        recyclerView.setLayoutManager(layoutManager);
-        ReposAdapter adapter = new ReposAdapter(this, extendedRepos);
+        //new code
+        RecyclerView recyclerView = findViewById(R.id.viewmodel_recyclerview);
+        RepositoriesListAdapter adapter = new RepositoriesListAdapter(this);
         recyclerView.setAdapter(adapter);
-        setRecyclerView();
-
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),
-                layoutManager.getOrientation());
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        //new new code
+        //private RepositoriesListAdapter adapter;
+        RepositoriesViewModel repositoriesViewModel = ViewModelProviders.of(this).get(RepositoriesViewModel.class);
+        // Update the cached copy of the words in the adapter.
+        repositoriesViewModel.getAllRepositories().observe(this, adapter::setRepositories);
+        emptyView = findViewById(R.id.empty_view);
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(
+                recyclerView.getContext(),
+                new LinearLayoutManager(this).getOrientation());
         recyclerView.addItemDecoration(dividerItemDecoration);
         try {
             APIInterface rxRepoApi = app.getApiInterface(APIInterface.class);
-            loadExtendedRepos(rxRepoApi)
-            //loadExtendedReposWithPages(rxRepoApi)
+            loadRepos(rxRepoApi)
             .onErrorReturn((Throwable throwable1) -> {
-                handleException((Exception) throwable1);
+                handleException(throwable1);
                 //empty object of the datatype
-                return null; //Repository.RepositoryFabric.getRepository(null, null);
+                return null;
             })
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
-            .subscribe(new Consumer<Repository>() {
-                @Override
-                public void accept(Repository repoToSave) throws Exception {
-                    OrganizationReposActivity.this.saveRepo(repoToSave);
-                }
-            }, throwable -> handleException((Exception) throwable));
+            .subscribe(repositoriesViewModel::insert,
+                    this::handleException);
         } catch (Exception e) {
             handleException(e);
         }
     }
 
-    private void setRecyclerView() {
-        if (extendedRepos.isEmpty()) {
-            recyclerView.setVisibility(View.GONE);
-            emptyView.setVisibility(View.VISIBLE);
-        } else {
-            emptyView.setVisibility(View.GONE);
-            recyclerView.setVisibility(View.VISIBLE);
-        }
-    }
 
-    private void handleException(Exception ex) {
+    private void handleException(Throwable ex) {
         String exInfo = ex.toString() +
                 ((ex instanceof HttpException)
                         ? ". " + ((HttpException) ex).message()
@@ -112,14 +92,8 @@ public class OrganizationReposActivity extends AppCompatActivity
                 exInfo, Toast.LENGTH_SHORT).show();
     }
 
-    private void saveRepo(IExtendedRepo repoToSave) {
-        extendedRepos.add(repoToSave);
-        recyclerView.getAdapter().notifyDataSetChanged();
-        setRecyclerView();
-    }
 
-
-    public static Observable<Repository> loadExtendedRepos(
+    public static Observable<Repository> loadRepos(
             APIInterface rxRepoApi) {
         //объект, который склеит все страницы с репозиториями
         Observable<List<Repo>> repoList = new PagesConcatinator<>(
@@ -145,18 +119,4 @@ public class OrganizationReposActivity extends AppCompatActivity
                         //создаём объект (repo1, contributorsNumber) -> new Repository(repo1, contributorsNUmber));
                         Repository.RepositoryFabric::getRepository);
     }
-
-
-    @Override
-    public void recycleViewListClicked(View v, int position) {
-        IExtendedRepo selectedRepo = extendedRepos.get(position);
-        if (selectedRepo != null) {
-            //Toast.makeText(this, selectedRepo.getFullName(), Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(this, RepoActivity.class); //ContributorsListActivity.class);
-
-            app.setSelectedRepo(selectedRepo);
-            this.startActivity(intent);
-        }
-    }
-
 }
