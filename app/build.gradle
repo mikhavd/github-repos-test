@@ -111,6 +111,9 @@ dependencies {
 
     // Test helpers
     testImplementation "androidx.room:room-testing:$room_version"
+
+    //Coroutines
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.0.0"
 }
 repositories {
     mavenCentral()
