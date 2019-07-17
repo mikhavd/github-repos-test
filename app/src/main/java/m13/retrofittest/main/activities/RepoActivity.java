@@ -1,16 +1,16 @@
-package m13.retrofittest.main.githubUI.activities;
+package m13.retrofittest.main.activities;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import m13.retrofittest.R;
-import m13.retrofittest.main.api.repos.IExtendedRepo;
-import m13.retrofittest.main.githubUI.GithubApp;
+import m13.retrofittest.main.repos.IExtendedRepo;
+import m13.retrofittest.main.application.GithubApp;
 
 /**
  * Created by Mikhail Avdeev on 19.02.2019.
@@ -24,7 +24,7 @@ public class RepoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         GithubApp app = (GithubApp) getApplicationContext();
         this.selectedRepo = app.getSelectedRepo();
-        setTitle("Repo: " + selectedRepo.getName());
+        setTitle("Repo: " + selectedRepo.getFullName());
         setContentView(R.layout.repo_activity);
         TextView infoView = findViewById(R.id.repo_info);
         infoView.setText(selectedRepo.getRepoInfo());

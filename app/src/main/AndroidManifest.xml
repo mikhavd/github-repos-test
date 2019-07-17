@@ -12,19 +12,19 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:name=".main.githubUI.GithubApp"
+        android:name=".main.application.GithubApp"
         tools:ignore="GoogleAppIndexingWarning"
         android:fullBackupContent="@xml/backup_descriptor">
 
-        <activity android:name=".main.githubUI.activities.OrganizationReposActivity">
+        <activity android:name=".main.activities.OrganizationReposActivity">
         <intent-filter>
             <action android:name="android.intent.action.MAIN" />
             <category android:name="android.intent.category.LAUNCHER" />
         </intent-filter>
         </activity>
-        <activity android:name=".main.githubUI.activities.ContributorsListActivity" />
-        <activity android:name=".main.githubUI.activities.CommitsListActivity" />
-        <activity android:name=".main.githubUI.activities.RepoActivity" />
+        <activity android:name=".main.activities.CommitsListActivity" />
+        <activity android:name=".main.activities.RepoActivity" />
+        <activity android:name=".main.activities.ContributorsListActivity" />
     </application>
 
 </manifest>

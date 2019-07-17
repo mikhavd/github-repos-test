@@ -1,4 +1,4 @@
-package m13.retrofittest.main.api.repos;
+package m13.retrofittest.main.repos;
 
 import java.util.List;
 

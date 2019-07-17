@@ -1,13 +1,14 @@
-package m13.retrofittest.main.githubUI.activities;
+package m13.retrofittest.main.activities;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,15 +19,15 @@ import io.reactivex.schedulers.Schedulers;
 import m13.retrofittest.R;
 import m13.retrofittest.main.api.generated.commits.Commit;
 import m13.retrofittest.main.api.generated.commits.CommitData;
-import m13.retrofittest.main.api.repos.IExtendedRepo;
+import m13.retrofittest.main.repos.IExtendedRepo;
 import m13.retrofittest.main.api.services.APIInterface;
 import m13.retrofittest.main.api.services.PagesConcatinator;
-import m13.retrofittest.main.githubUI.CommitsAdapter;
-import m13.retrofittest.main.githubUI.GithubApp;
+import m13.retrofittest.main.application.GithubApp;
 import m13.retrofittest.main.githubUI.RecyclerViewClickListener;
+import m13.retrofittest.main.ui.CommitsAdapter;
 
-import static m13.retrofittest.main.githubUI.GithubApp.CLIENT_ID;
-import static m13.retrofittest.main.githubUI.GithubApp.CLIENT_SECRET;
+import static m13.retrofittest.main.application.GithubApp.CLIENT_ID;
+import static m13.retrofittest.main.application.GithubApp.CLIENT_SECRET;
 
 /**
  * Created by Mikhail Avdeev on 19.02.2019.
@@ -44,7 +45,7 @@ public class CommitsListActivity extends AppCompatActivity implements RecyclerVi
 
         GithubApp app = (GithubApp) getApplicationContext();
         this.selectedRepo = app.getSelectedRepo();
-        setTitle("Commits of " + selectedRepo.getName());
+        setTitle("Commits of " + selectedRepo.getFullName());
         setContentView(R.layout.basic_activity);
         recyclerView = findViewById(R.id.posts_recycle_view);
         emptyView = findViewById(R.id.empty_view);
@@ -100,7 +101,7 @@ public class CommitsListActivity extends AppCompatActivity implements RecyclerVi
 
     private Observable<List<CommitData>> loadRepoCommitsList(APIInterface rxApi) {
         return new PagesConcatinator<>(
-                () -> rxApi.getCommitDataList(selectedRepo.getName(), CLIENT_ID, CLIENT_SECRET),
+                () -> rxApi.getCommitDataList(selectedRepo.getFullName(), CLIENT_ID, CLIENT_SECRET),
                 url -> rxApi.getCommitDataListByLink(url + "&client_id=" + CLIENT_ID + "&client_secret=" + CLIENT_SECRET))
                 .getObservableT();
     }

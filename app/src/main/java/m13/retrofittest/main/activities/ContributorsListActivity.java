@@ -1,13 +1,14 @@
-package m13.retrofittest.main.githubUI.activities;
+package m13.retrofittest.main.activities;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,15 +18,15 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import m13.retrofittest.R;
 import m13.retrofittest.main.api.generated.contributors.Contributor;
-import m13.retrofittest.main.api.repos.IExtendedRepo;
-import m13.retrofittest.main.api.services.PagesConcatinator;
+import m13.retrofittest.main.repos.IExtendedRepo;
 import m13.retrofittest.main.api.services.APIInterface;
-import m13.retrofittest.main.githubUI.ContributorsAdapter;
-import m13.retrofittest.main.githubUI.GithubApp;
+import m13.retrofittest.main.api.services.PagesConcatinator;
+import m13.retrofittest.main.application.GithubApp;
 import m13.retrofittest.main.githubUI.RecyclerViewClickListener;
+import m13.retrofittest.main.ui.ContributorsAdapter;
 
-import static m13.retrofittest.main.githubUI.GithubApp.CLIENT_ID;
-import static m13.retrofittest.main.githubUI.GithubApp.CLIENT_SECRET;
+import static m13.retrofittest.main.application.GithubApp.CLIENT_ID;
+import static m13.retrofittest.main.application.GithubApp.CLIENT_SECRET;
 
 /**
  * Created by Mikhail Avdeev on 13.02.2019.
@@ -44,7 +45,7 @@ public class ContributorsListActivity extends AppCompatActivity implements Recyc
 
         GithubApp app = (GithubApp) getApplicationContext();
         this.selectedRepo = app.getSelectedRepo();
-        setTitle("Contributors of " + selectedRepo.getName());
+        setTitle("Contributors of " + selectedRepo.getFullName());
         setContentView(R.layout.basic_activity);
         recyclerView = findViewById(R.id.posts_recycle_view);
         emptyView = findViewById(R.id.empty_view);
@@ -91,7 +92,7 @@ public class ContributorsListActivity extends AppCompatActivity implements Recyc
 
     private Observable<List<Contributor>> loadRepoContributorsList(APIInterface rxApi) {
         return new PagesConcatinator<>(
-                () -> rxApi.getContributorsList(selectedRepo.getName(), CLIENT_ID, CLIENT_SECRET),
+                () -> rxApi.getContributorsList(selectedRepo.getFullName(), CLIENT_ID, CLIENT_SECRET),
                 url -> rxApi.getContributorsListByLink(url + "&client_id=" + CLIENT_ID + "&client_secret=" + CLIENT_SECRET))
                 .getObservableT();
     }

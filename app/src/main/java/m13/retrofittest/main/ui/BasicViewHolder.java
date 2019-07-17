@@ -1,10 +1,12 @@
-package m13.retrofittest.main.githubUI;
+package m13.retrofittest.main.ui;
 
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.recyclerview.widget.RecyclerView;
+
 import m13.retrofittest.R;
+import m13.retrofittest.main.githubUI.RecyclerViewClickListener;
 
 /**
  * Created by Mikhail Avdeev on 18.12.2018.
@@ -17,8 +19,8 @@ public class BasicViewHolder extends RecyclerView.ViewHolder implements View.OnC
     private TextView bottomRightText;
 
 
-    BasicViewHolder(View itemView,
-                    RecyclerViewClickListener itemListener) {
+    public BasicViewHolder(View itemView,
+                           RecyclerViewClickListener itemListener) {
         super(itemView);
         this.itemListener = itemListener;
         mainText = (TextView) itemView.findViewById(R.id.main_text);

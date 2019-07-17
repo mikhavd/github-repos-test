@@ -6,26 +6,28 @@ import java.lang.reflect.Type;
 /**
  * Created by Mikhail Avdeev on 09.02.2019.
  */
-public class ApiService<API> {
-    protected API api;
-    //private final Class<API> type;
+public class ApiService<Api> {
+    protected Api api;
+    //private final Class<Api> type;
 
 
     //для наследников
     public ApiService(GithubRetrofitClient githubRetrofitClient){
-        this.api = githubRetrofitClient.getRetrofit().create(getManagedClass());
+        //todo ченкуть, нужно ли это вообще
+        //тут был error при компиляции с -Xlint:unchecked...
+        // this.api = githubRetrofitClient.getRetrofit().create(getManagedClass());
     }
 
 
-    protected Class<API> getManagedClass() {
+    /*private Class<Api> getManagedClass() {
         ParameterizedType superclass = (ParameterizedType)
                 getClass().getGenericSuperclass();
         Type[] actualTypeArguments = superclass.getActualTypeArguments();
         Type type = actualTypeArguments[0];
-        return (Class<API>) type;
-    }
+        return (Class<Api>) type;
+    }*/
 
-    public API getApi() {
+    public Api getApi() {
         return api;
     }
 }

@@ -1,10 +1,10 @@
-package m13.retrofittest.main.api.repos
+package m13.retrofittest.main.repos
 
 interface IExtendedRepo {
 
     val contributorsNumber: Int?
 
-    val name: String
+    val fullName: String
 
     val stargazersCount: Int
 

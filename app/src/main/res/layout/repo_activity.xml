@@ -17,7 +17,7 @@
     android:layout_width="match_parent"
     android:layout_alignParentBottom="true">
 
-    <android.support.v7.widget.AppCompatButton
+    <Button
         android:id="@+id/button_contributors"
         android:layout_weight="1"
         android:layout_width="0dp"
@@ -25,7 +25,7 @@
         android:layout_alignParentBottom="true"
         android:text="Contributors" />
 
-    <android.support.v7.widget.AppCompatButton
+    <Button
         android:id="@+id/button_commits"
         android:layout_weight="1"
         android:layout_width="0dp"
