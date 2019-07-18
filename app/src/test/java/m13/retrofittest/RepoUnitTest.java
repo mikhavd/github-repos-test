@@ -21,7 +21,7 @@ public class RepoUnitTest {
     public void rxAPITestPages(){
         //RxReposService rxService = new RxReposService(new GithubRetrofitClient());
         //APIInterface rxRepoApi = rxService.getApi();
-        //OrganizationReposActivity.loadExtendedReposFromPages(rxRepoApi, this::print, this::printExInfo);
+        //RepositoriesActivity.loadExtendedReposFromPages(rxRepoApi, this::print, this::printExInfo);
     }
 
 

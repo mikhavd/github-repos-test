@@ -16,7 +16,7 @@
         tools:ignore="GoogleAppIndexingWarning"
         android:fullBackupContent="@xml/backup_descriptor">
 
-        <activity android:name=".main.activities.OrganizationReposActivity">
+        <activity android:name=".main.activities.RepositoriesActivity">
         <intent-filter>
             <action android:name="android.intent.action.MAIN" />
             <category android:name="android.intent.category.LAUNCHER" />

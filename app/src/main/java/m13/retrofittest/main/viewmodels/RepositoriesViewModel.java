@@ -1,4 +1,4 @@
-package m13.retrofittest.main.ui;
+package m13.retrofittest.main.viewmodels;
 
 import android.app.Application;
 
@@ -8,18 +8,19 @@ import androidx.lifecycle.LiveData;
 
 import java.util.List;
 
-import m13.retrofittest.main.database.RepoRepository;
+import m13.retrofittest.main.database.RepoRepositories;
 import m13.retrofittest.main.repos.Repository;
 
 public class RepositoriesViewModel extends AndroidViewModel {
 
-    private RepoRepository repoRepository;
+    //private RepositoriesRepository repositoriesRepository;
+    private RepoRepositories repoRepositories;
     private LiveData<List<Repository>> allRepositories;
 
     public RepositoriesViewModel(@NonNull Application application) {
         super(application);
-        repoRepository = new RepoRepository(application);
-        allRepositories = repoRepository.getAllRepositories();
+        repoRepositories = new RepoRepositories(application);
+        allRepositories = repoRepositories.getAllItems();
     }
 
     public LiveData<List<Repository>> getAllRepositories(){
@@ -27,6 +28,6 @@ public class RepositoriesViewModel extends AndroidViewModel {
     }
 
     public void insert(Repository repository){
-        repoRepository.insert(repository);
+        repoRepositories.insert(repository);
     }
 }

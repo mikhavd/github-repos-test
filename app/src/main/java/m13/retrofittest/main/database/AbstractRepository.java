@@ -11,35 +11,42 @@ import m13.retrofittest.main.repos.AbstractDao;
 
 public abstract class AbstractRepository<T, TDao extends AbstractDao<T>> {
 
-    private TDao tDao;
-    private LiveData<List<T>> allItems;
+    protected final RepoDatabase db;
+    protected TDao tDao;
+    protected LiveData<List<T>> allItems;
 
-    public AbstractRepository(Application application) {
-        RepoDatabase db = RepoDatabase.getDatabase(application);
+    AbstractRepository(Application application) {
+        db = RepoDatabase.getDatabase(application);
         tDao = getTDao(db);
         allItems = tDao.getAllItems();
     }
 
+    public LiveData<List<T>> getAllItems() {
+        return allItems;
+    }
+
     /*
-    этот метод возвращает Dao,
-    как RepoDatabase возвращает repositoryDao сейчас
-     */
+        этот метод возвращает Dao,
+        как RepoDatabase возвращает repositoryDao сейчас
+         */
     protected abstract TDao getTDao(RepoDatabase db);
 
     public void insert(T item){
-        insertAsyncTask<T, TDao> insertAsyncTask = getInsertAsyncTask();
+        insertAsyncTask<T> insertAsyncTask = getInsertAsyncTask(tDao);
         insertAsyncTask.execute(item);
     }
 
-    abstract insertAsyncTask<T,TDao> getInsertAsyncTask();
+    private insertAsyncTask<T> getInsertAsyncTask(TDao tDao){
+        return new insertAsyncTask<>(tDao);
+    };
 
 
     //в оригинале private static class
-    private static class insertAsyncTask<T, TDao extends AbstractDao<T>> extends AsyncTask<T, Void, Void> {
+    protected static class insertAsyncTask<T> extends AsyncTask<T, Void, Void> {
 
-        TDao asyncTaskDao;
+        AbstractDao<T> asyncTaskDao;
 
-        insertAsyncTask(TDao dao) {
+        insertAsyncTask(AbstractDao<T> dao) {
             asyncTaskDao = dao;
         }
 

@@ -25,7 +25,7 @@ import m13.retrofittest.main.api.services.PagesCounter;
 import m13.retrofittest.main.application.GithubApp;
 import m13.retrofittest.main.repos.Repository;
 import m13.retrofittest.main.ui.RepositoriesListAdapter;
-import m13.retrofittest.main.ui.RepositoriesViewModel;
+import m13.retrofittest.main.viewmodels.RepositoriesViewModel;
 import retrofit2.HttpException;
 
 import static m13.retrofittest.main.application.GithubApp.CLIENT_ID;
@@ -34,7 +34,7 @@ import static m13.retrofittest.main.application.GithubApp.CLIENT_SECRET;
 /**
  * Created by Mikhail Avdeev on 11.02.2019.
  */
-public class OrganizationReposActivity extends AppCompatActivity {
+public class RepositoriesActivity extends AppCompatActivity {
     private final static String organizationName = "square";
     private final static Integer maxNumberPerPage = 1000;
     private TextView emptyView;

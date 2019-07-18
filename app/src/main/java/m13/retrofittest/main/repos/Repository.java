@@ -43,7 +43,7 @@ public class Repository implements IExtendedRepo{
     @ColumnInfo(name="git_url")
     private String gitUrl;
 
-    Repository(){}
+    public Repository(){}
 
 
     @Override

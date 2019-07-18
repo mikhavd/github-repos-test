@@ -11,11 +11,10 @@ import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import m13.retrofittest.main.repos.Repository;
-import m13.retrofittest.main.repos.RepositoryDao;
 
 @Database(entities = {Repository.class}, version =3)
 public abstract class RepoDatabase extends RoomDatabase {
-    public abstract RepositoryDao repositoryDao();
+    public abstract RepoRepositories.RepoDao repoDao();
 
     private static volatile RepoDatabase INSTANCE;
 
@@ -47,10 +46,10 @@ public abstract class RepoDatabase extends RoomDatabase {
 
     private static class PopulateDbAsync extends AsyncTask<Void, Void, Void> {
 
-        private final RepositoryDao repositoryDao;
+        //private final RepositoryDao repositoryDao;
 
         PopulateDbAsync(RepoDatabase db) {
-            repositoryDao = db.repositoryDao();
+            //repositoryDao = db.repositoryDao();
         }
 
         @Override
@@ -81,5 +80,4 @@ public abstract class RepoDatabase extends RoomDatabase {
             database.execSQL("DELETE from Repositories where server_Id is null or server_Id = ''");
         }
     };
-
 }
