@@ -13,7 +13,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 import m13.retrofittest.main.repos.Repository;
 import m13.retrofittest.main.repos.RepositoryDao;
 
-@Database(entities = {Repository.class}, version = 2)
+@Database(entities = {Repository.class}, version =3)
 public abstract class RepoDatabase extends RoomDatabase {
     public abstract RepositoryDao repositoryDao();
 
@@ -25,7 +25,9 @@ public abstract class RepoDatabase extends RoomDatabase {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                             RepoDatabase.class, "repository_database")
-                            .addMigrations(MIGRATION_1_2)
+                            .addMigrations(
+                                    MIGRATION_1_2,
+                                    MIGRATION_2_3)
                             .addCallback(sRoomDatabaseCallback)
                             .build();
                 }
@@ -71,4 +73,13 @@ public abstract class RepoDatabase extends RoomDatabase {
             //database.execSQL("ALTER TABLE Repos "+ " ADD COLUMN pub_year INTEGER");
         }
     };
+
+    static final Migration MIGRATION_2_3 = new Migration(2, 3) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+            //https://stackoverflow.com/questions/3620828/sqlite-select-where-empty
+            database.execSQL("DELETE from Repositories where server_Id is null or server_Id = ''");
+        }
+    };
+
 }
