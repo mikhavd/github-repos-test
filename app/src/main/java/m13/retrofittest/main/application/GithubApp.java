@@ -1,6 +1,9 @@
 package m13.retrofittest.main.application;
 
 import android.app.Application;
+import android.content.Context;
+
+import com.facebook.stetho.Stetho;
 
 import m13.retrofittest.BuildConfig;
 import m13.retrofittest.main.api.GithubRetrofitClient;
@@ -18,10 +21,28 @@ public class GithubApp extends Application {
     @Override
     public void onCreate(){
         super.onCreate();
-        //KotlinRepoDatabase db = Room.databaseBuilder(getApplicationContext(),
-          //      KotlinRepoDatabase.class, "database-name").build();
-
+        initStetho(this);
         this.githubClient = new GithubRetrofitClient();
+    }
+
+    /*
+     * инициализация параметров для Stetho - библиотеки для отладки приложения
+     * @param context - контекст
+     */
+
+    public  void initStetho(Context context)
+    {
+
+        // Create an InitializerBuilder
+        Stetho.InitializerBuilder initializerBuilder = Stetho.newInitializerBuilder(this);
+        // Enable Chrome DevTools
+        initializerBuilder.enableWebKitInspector(Stetho.defaultInspectorModulesProvider(this));
+        // Enable command line interface
+        initializerBuilder.enableDumpapp(Stetho.defaultDumperPluginsProvider(context));
+        // Use the InitializerBuilder to generate an Initializer
+        com.facebook.stetho.Stetho.Initializer initializer = initializerBuilder.build();
+        // Initialize Stetho with the Initializer
+        com.facebook.stetho.Stetho.initialize(initializer);
     }
 
 

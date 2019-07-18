@@ -7,12 +7,13 @@ import androidx.annotation.NonNull;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
+import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import m13.retrofittest.main.repos.Repository;
 import m13.retrofittest.main.repos.RepositoryDao;
 
-@Database(entities = {Repository.class}, version = 1)
+@Database(entities = {Repository.class}, version = 2)
 public abstract class RepoDatabase extends RoomDatabase {
     public abstract RepositoryDao repositoryDao();
 
@@ -24,6 +25,7 @@ public abstract class RepoDatabase extends RoomDatabase {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                             RepoDatabase.class, "repository_database")
+                            .addMigrations(MIGRATION_1_2)
                             .addCallback(sRoomDatabaseCallback)
                             .build();
                 }
@@ -57,4 +59,16 @@ public abstract class RepoDatabase extends RoomDatabase {
             return null;
         }
     }
+
+    static final Migration MIGRATION_1_2 = new Migration(1, 2) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+            database.execSQL("ALTER TABLE Repository " +
+                    "RENAME TO Repositories");
+            database.execSQL("ALTER TABLE Repositories "+ " ADD COLUMN server_id INTEGER");
+            //database.execSQL("CREATE INDEX index_d_course_id_studio ON  d_course(id, studio)")
+            database.execSQL("CREATE UNIQUE INDEX index_repositories_uid_server_id on Repositories(uid, server_id)");
+            //database.execSQL("ALTER TABLE Repos "+ " ADD COLUMN pub_year INTEGER");
+        }
+    };
 }

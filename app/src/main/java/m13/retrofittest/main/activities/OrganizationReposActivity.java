@@ -47,7 +47,7 @@ public class OrganizationReposActivity extends AppCompatActivity {
 
         //create and populate adapter
         setTitle("Github repositories of Square");
-        setContentView(R.layout.basic_activity);
+        setContentView(R.layout.repos_activity);
 
         //new code
         RecyclerView recyclerView = findViewById(R.id.viewmodel_recyclerview);
