@@ -26,7 +26,7 @@ public class GenericRepository<T> {
     @SafeVarargs
     public final void insert(T... items){
         Thread insertThread = new Thread(new InsertRunnable(items));
-        insertThread.run();
+        insertThread.start();
     }
 
     private class InsertRunnable implements Runnable {
