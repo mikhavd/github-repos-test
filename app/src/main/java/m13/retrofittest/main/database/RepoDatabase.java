@@ -14,7 +14,7 @@ import m13.retrofittest.main.repos.Repository;
 
 @Database(entities = {Repository.class}, version =3)
 public abstract class RepoDatabase extends RoomDatabase {
-    public abstract RepoRepositories.RepoDao repoDao();
+    public abstract RepoDao repoDao();
 
     private static volatile RepoDatabase INSTANCE;
 

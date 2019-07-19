@@ -8,19 +8,20 @@ import androidx.lifecycle.LiveData;
 
 import java.util.List;
 
-import m13.retrofittest.main.database.RepoRepositories;
+import m13.retrofittest.main.database.GenericRepository;
+import m13.retrofittest.main.database.RepoDatabase;
 import m13.retrofittest.main.repos.Repository;
 
 public class RepositoriesViewModel extends AndroidViewModel {
 
     //private RepositoriesRepository repositoriesRepository;
-    private RepoRepositories repoRepositories;
+    private GenericRepository<Repository> repoRepository;
     private LiveData<List<Repository>> allRepositories;
 
     public RepositoriesViewModel(@NonNull Application application) {
         super(application);
-        repoRepositories = new RepoRepositories(application);
-        allRepositories = repoRepositories.getAllItems();
+        repoRepository = new GenericRepository<>(application, RepoDatabase::repoDao);
+        allRepositories = repoRepository.getAllItems();
     }
 
     public LiveData<List<Repository>> getAllRepositories(){
@@ -28,6 +29,6 @@ public class RepositoriesViewModel extends AndroidViewModel {
     }
 
     public void insert(Repository repository){
-        repoRepositories.insert(repository);
+        repoRepository.insert(repository);
     }
 }
