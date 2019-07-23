@@ -23,9 +23,9 @@ import m13.retrofittest.main.api.services.APIInterface;
 import m13.retrofittest.main.api.services.PagesConcatinator;
 import m13.retrofittest.main.api.services.PagesCounter;
 import m13.retrofittest.main.application.GithubApp;
-import m13.retrofittest.main.repos.Repository;
-import m13.retrofittest.main.ui.RepositoriesListAdapter;
-import m13.retrofittest.main.viewmodels.RepositoriesViewModel;
+import m13.retrofittest.main.repos.Repozitory;
+import m13.retrofittest.main.ui.RepozitoriesListAdapter;
+import m13.retrofittest.main.viewmodels.RepozitoriesViewModel;
 import retrofit2.HttpException;
 
 import static m13.retrofittest.main.application.GithubApp.CLIENT_ID;
@@ -51,14 +51,14 @@ public class RepositoriesActivity extends AppCompatActivity {
 
         //new code
         RecyclerView recyclerView = findViewById(R.id.viewmodel_recyclerview);
-        RepositoriesListAdapter adapter = new RepositoriesListAdapter(this);
+        RepozitoriesListAdapter adapter = new RepozitoriesListAdapter(this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        //new new code
-        //private RepositoriesListAdapter adapter;
-        RepositoriesViewModel repositoriesViewModel = ViewModelProviders.of(this).get(RepositoriesViewModel.class);
+        //RepozitoriesViewModel repozitoriesViewModel =
+        RepozitoriesViewModel repozitoriesViewModel =
+                ViewModelProviders.of(this).get(RepozitoriesViewModel.class);
         // Update the cached copy of the words in the adapter.
-        repositoriesViewModel.getAllRepositories().observe(this, adapter::setRepositories);
+        repozitoriesViewModel.getAllItems().observe(this, adapter::setRepositories);
         emptyView = findViewById(R.id.empty_view);
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(
                 recyclerView.getContext(),
@@ -74,7 +74,7 @@ public class RepositoriesActivity extends AppCompatActivity {
             })
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
-            .subscribe(repositoriesViewModel::insert,
+            .subscribe(repozitoriesViewModel::insert,
                     this::handleException);
         } catch (Exception e) {
             handleException(e);
@@ -93,14 +93,14 @@ public class RepositoriesActivity extends AppCompatActivity {
     }
 
 
-    public static Observable<Repository> loadRepos(
+    public static Observable<Repozitory> loadRepos(
             APIInterface rxRepoApi) {
         //объект, который склеит все страницы с репозиториями
         Observable<List<Repo>> repoList = new PagesConcatinator<>(
                 () -> rxRepoApi.getRepoList(CLIENT_ID, CLIENT_SECRET),
                 url -> rxRepoApi.getReposListByLink(url + "&client_id=" + CLIENT_ID + "&client_secret=" + CLIENT_SECRET))
                 .getObservableT();
-        //new Repository(repo1, contributorsNumber);
+        //new Repozitory(repo1, contributorsNumber);
         return repoList
                 .flatMap(Observable::fromIterable)//разбираем Observable<List<Repo>> на перебор Repo
                 .flatMap( //в этом flatMap используется сигнатура с двумя функциями:
@@ -116,7 +116,7 @@ public class RepositoriesActivity extends AppCompatActivity {
                             }
                         },
                         //...вторая использует результат первой:
-                        //создаём объект (repo1, contributorsNumber) -> new Repository(repo1, contributorsNUmber));
-                        Repository.RepositoryFabric::getRepository);
+                        //создаём объект (repo1, contributorsNumber) -> new Repozitory(repo1, contributorsNUmber));
+                        Repozitory.RepositoryFabric::getRepository);
     }
 }

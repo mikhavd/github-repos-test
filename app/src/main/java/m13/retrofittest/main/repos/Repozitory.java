@@ -12,7 +12,7 @@ import m13.retrofittest.main.api.generated.repos.Repo;
 
 @Entity(tableName = "repositories",
         indices = {@Index(value = {"uid", "server_id"}, unique = true)})
-public class Repository implements IExtendedRepo{
+public class Repozitory implements IExtendedRepo{
 
     @PrimaryKey(autoGenerate = true)
     public int uid;
@@ -43,7 +43,7 @@ public class Repository implements IExtendedRepo{
     @ColumnInfo(name="git_url")
     private String gitUrl;
 
-    public Repository(){}
+    public Repozitory(){}
 
 
     @Override
@@ -68,17 +68,17 @@ public class Repository implements IExtendedRepo{
     }
 
     public static class RepositoryFabric {
-        static public Repository getRepository(Repo repo, Integer contributorsNumber){
-            Repository repository = new Repository();
-            repository.setServerId(repo.getId());
-            repository.setFullName(repo.getFullName());
-            repository.setStargazersCount(repo.getStargazersCount());
-            repository.setDescription(repo.getDescription());
-            repository.setOwnerLogin(repo.getOwner().getLogin());
-            repository.setCreatedAt(repo.getCreatedAt());
-            repository.setGitUrl(repo.getGitUrl());
-            repository.setContributorsNumber(contributorsNumber);
-            return repository;
+        static public Repozitory getRepository(Repo repo, Integer contributorsNumber){
+            Repozitory repozitory = new Repozitory();
+            repozitory.setServerId(repo.getId());
+            repozitory.setFullName(repo.getFullName());
+            repozitory.setStargazersCount(repo.getStargazersCount());
+            repozitory.setDescription(repo.getDescription());
+            repozitory.setOwnerLogin(repo.getOwner().getLogin());
+            repozitory.setCreatedAt(repo.getCreatedAt());
+            repozitory.setGitUrl(repo.getGitUrl());
+            repozitory.setContributorsNumber(contributorsNumber);
+            return repozitory;
         }
     }
 

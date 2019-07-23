@@ -1,4 +1,4 @@
-package m13.retrofittest.main.repos;
+package m13.retrofittest.main.database;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Insert;

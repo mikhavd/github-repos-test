@@ -31,7 +31,7 @@ tmp/**/*
 *~.nib
 local.properties
 
-# Do you really want to ignore .classpath? That seems a rather important thing to have in your git repository.
+# Do you really want to ignore .classpath? That seems a rather important thing to have in your git repozitory.
 # .classpath
 
 .settings/

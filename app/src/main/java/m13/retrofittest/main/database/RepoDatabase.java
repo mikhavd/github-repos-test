@@ -10,9 +10,9 @@ import androidx.room.RoomDatabase;
 import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
-import m13.retrofittest.main.repos.Repository;
+import m13.retrofittest.main.repos.Repozitory;
 
-@Database(entities = {Repository.class}, version =3)
+@Database(entities = {Repozitory.class}, version =3)
 public abstract class RepoDatabase extends RoomDatabase {
     public abstract RepoDao repoDao();
 
@@ -55,7 +55,7 @@ public abstract class RepoDatabase extends RoomDatabase {
         @Override
         protected Void doInBackground(final Void... params) {
             //repositoryDao.deleteAll();
-            //Repository repository = null; //new Repository("Hello");
+            //Repozitory repository = null; //new Repozitory("Hello");
             //repositoryDao.insert(repository);
             return null;
         }

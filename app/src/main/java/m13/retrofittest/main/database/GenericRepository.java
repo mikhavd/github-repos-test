@@ -6,8 +6,6 @@ import androidx.lifecycle.LiveData;
 
 import java.util.List;
 
-import m13.retrofittest.main.repos.GenericDao;
-
 public class GenericRepository<T> {
 
     private GenericDao<T> tDao;
@@ -29,7 +27,7 @@ public class GenericRepository<T> {
         insertThread.start();
     }
 
-    private class InsertRunnable implements Runnable {
+    private final class InsertRunnable implements Runnable {
 
         private final T[] items;
 
@@ -39,7 +37,7 @@ public class GenericRepository<T> {
         }
 
         @Override
-        public void run() {
+        final public void run() {
             tDao.insert(items);
         }
     }

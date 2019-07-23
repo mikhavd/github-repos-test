@@ -11,48 +11,48 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 import m13.retrofittest.R;
-import m13.retrofittest.main.repos.Repository;
+import m13.retrofittest.main.repos.Repozitory;
 
 /**
  * Created by Mikhail Avdeev on 11.02.2019.
  */
-public class RepositoriesListAdapter extends RecyclerView.Adapter<RepositoriesListAdapter.RepositoryViewHolder> {
+public class RepozitoriesListAdapter extends RecyclerView.Adapter<RepozitoriesListAdapter.RepozitoryViewHolder> {
 
-    class RepositoryViewHolder extends RecyclerView.ViewHolder {
+    class RepozitoryViewHolder extends RecyclerView.ViewHolder {
 
         private final TextView repositoryTextView;
 
-        private RepositoryViewHolder(View repositoryView) {
+        private RepozitoryViewHolder(View repositoryView) {
             super(repositoryView);
             repositoryTextView = itemView.findViewById(R.id.textView);//repositoryView;
         }
     }
 
     private final LayoutInflater layoutInflater;
-    private List<Repository> repositoryList; // Cached copy of words
+    private List<Repozitory> repozitoryList; // Cached copy of words
 
 
-    public RepositoriesListAdapter(Context context) { layoutInflater = LayoutInflater.from(context); }
+    public RepozitoriesListAdapter(Context context) { layoutInflater = LayoutInflater.from(context); }
 
     @Override
-    public RepositoryViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RepozitoryViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = layoutInflater.inflate(R.layout.recyclerview_item, parent, false);
-        return new RepositoryViewHolder(itemView);
+        return new RepozitoryViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(RepositoryViewHolder holder, int position) {
-        if (repositoryList != null) {
-            Repository currentRepository = repositoryList.get(position);
-            holder.repositoryTextView.setText(currentRepository.getFullName());
+    public void onBindViewHolder(RepozitoryViewHolder holder, int position) {
+        if (repozitoryList != null) {
+            Repozitory currentRepozitory = repozitoryList.get(position);
+            holder.repositoryTextView.setText(currentRepozitory.getFullName());
         } else {
             // Covers the case of data not being ready yet.
             holder.repositoryTextView.setText("No repositories");
         }
     }
 
-    public void setRepositories(List<Repository> repositories){
-        repositoryList = repositories;
+    public void setRepositories(List<Repozitory> repositories){
+        repozitoryList = repositories;
         notifyDataSetChanged();
     }
 
@@ -60,8 +60,8 @@ public class RepositoriesListAdapter extends RecyclerView.Adapter<RepositoriesLi
     // repositoriesList has not been updated (means initially, it's null, and we can't return null).
     @Override
     public int getItemCount() {
-        if (repositoryList != null)
-            return repositoryList.size();
+        if (repozitoryList != null)
+            return repozitoryList.size();
         else return 0;
     }
 }

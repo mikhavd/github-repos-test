@@ -9,23 +9,22 @@ import androidx.room.Query;
 
 import java.util.List;
 
-import m13.retrofittest.main.repos.GenericDao;
-import m13.retrofittest.main.repos.Repository;
+import m13.retrofittest.main.repos.Repozitory;
 
 @Dao
-public interface RepoDao extends GenericDao<Repository> {
+public interface RepoDao extends GenericDao<Repozitory> {
 
     @Override
     @Query("SELECT * FROM repositories")
-    LiveData<List<Repository>> getAllItems();
+    LiveData<List<Repozitory>> getAllItems();
 
     @Override
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insert(Repository... item);
+    void insert(Repozitory... item);
 
     @Override
     @Delete
-    void delete(Repository item);
+    void delete(Repozitory item);
 
     @Query("DELETE FROM repositories")
     void deleteAll();
